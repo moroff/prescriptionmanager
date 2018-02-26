@@ -1,0 +1,5 @@
+ =========================
+ Prescription Manager V0.1
+ =========================
+ 
+:: Built with Spring Boot :: ${spring-boot.version}

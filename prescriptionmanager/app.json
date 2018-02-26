@@ -1,0 +1,11 @@
+{
+  "name": "Prescription Manager",
+  "description": "Prescription Manager, deployed to Heroku.",
+  "addons": [ "heroku-postgresql" ],
+  "logo": "https://github.com/kissaten/spring-petclinic/raw/master/src/main/resources/static/resources/images/pets.png",
+  "env": {
+    "JAVA_OPTS": {
+      "value": "-Dspring.profiles.active=postgresql"
+    }
+  }
+}

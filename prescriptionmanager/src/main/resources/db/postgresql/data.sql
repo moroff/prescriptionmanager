@@ -1,0 +1,2 @@
+INSERT INTO drugs VALUES (1, "Thyronajod 75 Henning") ON CONFLICT DO NOTHING;
+INSERT INTO drugs VALUES (2, "Thyronajod 100 Henning") ON CONFLICT DO NOTHING;

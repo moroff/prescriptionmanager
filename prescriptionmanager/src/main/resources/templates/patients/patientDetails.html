@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org"
+  th:replace="~{fragments/layout :: layout (~{::body},'patients')}">
+
+  <body>
+  
+  
+    <h2>Patient Information</h2>
+  
+  
+    <table class="table table-striped" th:object="${patient}">
+      <tr>
+        <th>Name</th>
+        <td><b th:text="*{firstName + ' ' + lastName}"></b></td>
+      </tr>
+      <tr>
+        <th>Address</th>
+        <td th:text="*{street + ' ' + houseNumber}" /></td>
+      </tr>
+      <tr>
+        <th>City</th>
+        <td th:text="*{zipCode + ' ' + city}" /></td>
+      </tr>
+      <tr>
+        <th>Telephone</th>
+        <td th:text="*{telephone}" /></td>
+      </tr>
+    </table>
+  
+    <a th:href="@{{id}/edit(id=${patient.id})}" class="btn btn-default">Edit
+      Patient</a>
+    <a th:href="@{{id}/drugs/new(id=${patient.id})}" class="btn btn-default">Add
+      New Drug</a>
+  
+    <br />
+    <br />
+    <br />
+    <h2>Drugs</h2>
+
+    <table class="table table-striped">
+  
+      <tr th:each="drugBoxItem : ${patient.drugBoxItems}">
+        <td valign="top">
+          <dl class="dl-horizontal">
+            <dt>Name</dt>
+            <dd th:text="${drugBoxItem.drugName}" /></dd>
+            <dt>Exhaust Date</dt>
+            <dd th:text="${#temporals.format(drugBoxItem.exhaustingDate, 'dd.MM.yyyy')}" /></dd>
+            <dt>Inventory Date</dt>
+            <dd th:text="${#temporals.format(drugBoxItem.inventoryDate, 'dd.MM.yyyy')}" /></dd>
+            <dt>Inventory Amount</dt>
+            <dd th:text="${drugBoxItem.inventoryAmount}" /></dd>
+          </dl>
+        </td>
+        <td valign="middle">
+          <a th:href="@{{patientId}/drugs/{drugId}/view(patientId=${patient.id},drugId=${drugBoxItem.id})}" class="btn btn-default">View</a>
+        </td>
+        <td valign="middle">
+          <a th:href="@{{patientId}/drugs/{drugId}/edit(patientId=${patient.id},drugId=${drugBoxItem.id})}" class="btn btn-default">Edit</a>
+        </td>
+      </tr>
+  
+    </table>
+  
+  </body>
+
+</html>
