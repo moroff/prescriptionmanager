@@ -1,5 +1,6 @@
 package info.moroff.prescriptionmanager.patient;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +55,7 @@ class DrugBoxItemController {
 	@RequestMapping(value = "/drugs/{drugId}/edit", method = RequestMethod.GET)
 	public String editPatientDetailsForm(Patient patient, @PathVariable("drugId") int drugId, Model model) {
 		DrugBoxItem drugBoxItem = drugBoxItems.findById(drugId);
+		drugBoxItem.setInventoryDate(LocalDate.now());
 		model.addAttribute("drugBoxItem", drugBoxItem);
 		return VIEWS_DRUGS_CREATE_OR_UPDATE_FORM;
 	}
