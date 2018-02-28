@@ -3,7 +3,7 @@
 
 <body>
 
-  <h2>Patient</h2>
+  <h2 th:text="#{patient}">Patient</h2>
   <form th:object="${patient}" class="form-horizontal" id="add-patient-form" method="post">
     <div class="form-group has-feedback">
       <input
@@ -13,14 +13,12 @@
 
 
     </div>
-    
-    
-    
+      
     <div class="form-group">
       <div class="col-sm-offset-2 col-sm-10">
         <button
-          th:with="text=${patient['new']} ? 'Add Patient' : 'Update Patient'"
-          class="btn btn-default" type="submit" th:text="${text}">Add Patient</button>
+          th:with="text=${patient['new']} ? 'patientAdd' : 'patientUpdate'"
+          class="btn btn-default" type="submit" th:text="#{${text}}">Add Patient</button>
       </div>
     </div>
   </form>

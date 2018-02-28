@@ -6,8 +6,7 @@
   <body>
   
   
-    <h2>Patient Information</h2>
-  
+    <h2 th:text="#{patientDetails}">Patient Information</h2>
   
     <table class="table table-striped" th:object="${patient}">
       <tr>
@@ -15,23 +14,21 @@
         <td><b th:text="*{firstName + ' ' + lastName}"></b></td>
       </tr>
       <tr>
-        <th>Address</th>
+        <th th:text="#{address}">Address</th>
         <td th:text="*{street + ' ' + houseNumber}" /></td>
       </tr>
       <tr>
-        <th>City</th>
+        <th th:text="#{city}">City</th>
         <td th:text="*{zipCode + ' ' + city}" /></td>
       </tr>
       <tr>
-        <th>Telephone</th>
+        <th th:text="#{telephone}">Telephone</th>
         <td th:text="*{telephone}" /></td>
       </tr>
     </table>
   
-    <a th:href="@{{id}/edit(id=${patient.id})}" class="btn btn-default">Edit
-      Patient</a>
-    <a th:href="@{{id}/drugs/new(id=${patient.id})}" class="btn btn-default">Add
-      New Drug</a>
+    <a th:href="@{{id}/edit(id=${patient.id})}" class="btn btn-default" th:text="#{patientEdit}">Edit Patient</a>
+    <a th:href="@{{id}/drugs/new(id=${patient.id})}" class="btn btn-default" th:text="#{drugsAdd}">Add New Drug</a>
   
     <br />
     <br />
@@ -43,21 +40,18 @@
       <tr th:each="drugBoxItem : ${patient.drugBoxItems}">
         <td valign="top">
           <dl class="dl-horizontal">
-            <dt>Name</dt>
+            <dt th:text="#{name}">Name</dt>
             <dd th:text="${drugBoxItem.drugName}" /></dd>
-            <dt>Exhaust Date</dt>
+            <dt th:text="#{exhaustingDate}">Exhaust Date</dt>
             <dd th:text="${#temporals.format(drugBoxItem.exhaustingDate, 'dd.MM.yyyy')}" /></dd>
-            <dt>Inventory Date</dt>
+            <dt th:text="#{inventoryDate}">Inventory Date</dt>
             <dd th:text="${#temporals.format(drugBoxItem.inventoryDate, 'dd.MM.yyyy')}" /></dd>
-            <dt>Inventory Amount</dt>
+            <dt th:text="#{inventoryAmount}">Inventory Amount</dt>
             <dd th:text="${drugBoxItem.inventoryAmount}" /></dd>
           </dl>
         </td>
         <td valign="middle">
-          <a th:href="@{{patientId}/drugs/{drugId}/view(patientId=${patient.id},drugId=${drugBoxItem.id})}" class="btn btn-default">View</a>
-        </td>
-        <td valign="middle">
-          <a th:href="@{{patientId}/drugs/{drugId}/edit(patientId=${patient.id},drugId=${drugBoxItem.id})}" class="btn btn-default">Edit</a>
+          <a th:href="@{{patientId}/drugs/{drugId}/edit(patientId=${patient.id},drugId=${drugBoxItem.id})}" class="btn btn-default" th:text="#{edit}">Edit</a>
         </td>
       </tr>
   
