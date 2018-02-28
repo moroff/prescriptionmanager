@@ -3,7 +3,7 @@
 
 <body>
 
-  <h2>Find Drugs</h2>
+  <h2 th:text="#{drugsFind}">Find Drugs</h2>
 
   <form th:object="${drug}" th:action="@{/drugs}" method="get"
     class="form-horizontal" id="search-drug-form">
@@ -21,14 +21,14 @@
     </div>
     <div class="form-group">
       <div class="col-sm-offset-2 col-sm-10">
-        <button type="submit" class="btn btn-default">Find Drug</button>
+        <button type="submit" class="btn btn-default" th:text="#{drugsFind}">Find Drug</button>
       </div>
     </div>
 
   </form>
 
   <br />
-  <a class="btn btn-default" th:href="@{/drugs/new}">Add Drug</a>
+  <a class="btn btn-default" th:href="@{/drugs/new}" th:text="#{drugsAdd}">Add Drug</a>
 
 </body>
 </html>

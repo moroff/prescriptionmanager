@@ -10,7 +10,7 @@
 
     <link rel="shortcut icon" type="image/x-icon" th:href="@{/resources/images/favicon.png}">
 
-    <title>Prescription Manager :: a Spring Framework demonstration</title>
+    <title>Prescription Manager</title>
 
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
@@ -49,23 +49,28 @@
                       <span>Home</span>
                   </li>
   
-                  <li th:replace="::menuItem ('/patients.html','patients','patients','th-list','Patients')">
-                      <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+                  <li th:replace="::menuItem ('/patients.html','patients','patients','user', '__#{patients}__')">
+                      <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
                       <span>Patients</span>
                   </li>
   
-                  <li th:replace="::menuItem ('/drugs/find','drugs','find drugs','search','Find drugs')">
+                  <li th:replace="::menuItem ('/drugs/find','drugs','find drugs','search','__#{drugsFind}__')">
                       <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                       <span>Find drugs</span>
                   </li>
-    
-<!-- 
-                  <li th:replace="::menuItem ('/oups','error','trigger a RuntimeException to see how it is handled','warning-sign','Error')">
-                      <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
-                      <span>Error</span>
+      
+      <!-- 
+                  <li th:replace="::menuItem ('/settings','settings','settings','cog','Settings')">
+                      <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                      <span th:text="#{settings}">Settings</span>
                   </li>
- -->    
-  
+      
+                  <li th:replace="::menuItem ('/logout','logout','logout','log-out','Logout')">
+                      <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
+                      <span th:text="#{logout}">Logout 2</span>
+                  </li>
+       -->
+      
               </ul>
           </div>
       </div>

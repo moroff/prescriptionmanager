@@ -5,13 +5,13 @@
 
 <body>
 
-  <h2>Patients</h2>
+  <h2 th:text="#{patients}">Patients</h2>
 
   <table id="patients" class="table table-striped">
     <thead>
       <tr>
-        <th>Name</th>
-        <th>First exhausting date</th>
+        <th th:text="#{name}">Name</th>
+        <th th:text="#{exhaustingDate}">First exhausting date</th>
       </tr>
     </thead>
     <tbody>
@@ -22,6 +22,7 @@
     </tbody>
   </table>
 
+<!-- 
   <table class="table-buttons">
     <tr>
       <td><a th:href="@{/patients.xml}">View as XML</a></td>
@@ -29,6 +30,7 @@
       <td><a th:href="@{/patients.json}">View as JSON</a></td>
     </tr>
   </table>
+ -->
 
 </body>
 </html>

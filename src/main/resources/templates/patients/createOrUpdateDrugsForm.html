@@ -21,8 +21,8 @@
     <div class="form-group">
       <div class="col-sm-offset-2 col-sm-10">
         <button
-          th:with="text=${drugBoxItem['new']} ? 'Add Drug' : 'Update Drug'"
-          class="btn btn-default" type="submit" th:text="${text}">Add Drug</button>
+          th:with="text=${drugBoxItem['new']} ? 'drugsAdd' : 'drugsUpdate'"
+          class="btn btn-default" type="submit" th:text="#{${text}}">Add Drug</button>
       </div>
     </div>
   </form>
