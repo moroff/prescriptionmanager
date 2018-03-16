@@ -17,7 +17,7 @@
     <tbody>
       <tr th:each="patient : ${patients.patientList}">
         <td><a th:href="@{/patients/__${patient.id}__}"><div th:text="|${patient.firstName} ${patient.lastName}|">Edit</div></a></td>
-        <td th:text="${patient.exhaustingDate}"></td>
+        <td th:text="${#temporals.format(patient.exhaustingDate, 'dd.MM.yyyy')}"></td>
       </tr>
     </tbody>
   </table>
