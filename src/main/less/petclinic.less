@@ -11,51 +11,70 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+@import "colors.less";
+ 
 @icon-font-path:    "../../webjars/bootstrap/fonts/";
 
+@spring-light-grey: #f1f1f1;
+@spring-grey:       #838789;
 @spring-green:      #6db33f;
 @spring-dark-green: #5fa134;
 @spring-brown:      #34302D;
-@spring-grey:       #838789;
-@spring-light-grey: #f1f1f1;
 
-@body-bg:                           @spring-light-grey;
-@text-color:                        @spring-brown;
-@link-color:                        @spring-dark-green;
-@link-hover-color:                  @spring-dark-green;
+// Blue monochromatic color schemes (see https://www.w3schools.com/colors/colors_monochromatic.asp) 
+/*
+@pm-light:     #DBE5FF;
+@pm-bright:         #678FFE;
+@pm-normal:         #0247FE;
+@pm-dark:           #012998;
+@pm-verydark:       #091534;
 
-@navbar-default-link-color:         @spring-light-grey;
-@navbar-default-link-active-color:  @spring-light-grey;
-@navbar-default-link-hover-color:   @spring-light-grey;
-@navbar-default-link-hover-bg:      @spring-green;
-@navbar-default-toggle-icon-bar-bg: @spring-light-grey;
+@pm-verylight:      #FFFFFF;
+@pm-light:          #F3F6FF;
+@pm-bright:         #769AFE;
+@pm-normal:         #0E4EFE;
+@pm-dark:           #012DA7;
+@pm-verydark:       #0A1637;
+ */
+
+@body-bg:                           @pm-light;
+@text-color:                        @pm-verydark;
+@link-color:                        @pm-dark;
+@link-hover-color:                  @pm-dark;
+
+@navbar-default-link-color:         @pm-light;
+@navbar-default-link-active-color:  @pm-light;
+@navbar-default-link-hover-color:   @pm-light;
+@navbar-default-link-hover-bg:      @pm-bright;
+@navbar-default-toggle-icon-bar-bg: @pm-light;
 @navbar-default-toggle-hover-bg:    transparent;
-@navbar-default-link-active-bg:     @spring-green;
+@navbar-default-link-active-bg:     @pm-bright;
 
 @border-radius-base:             0;
 @border-radius-large:            0;
 @border-radius-small:            0;
 
-@btn-default-color:              @spring-light-grey;
-@btn-default-bg:                 @spring-brown;
-@btn-default-border:             @spring-green;
+@btn-default-color:              @pm-verylight;
+@btn-default-bg:                 @pm-dark;
+@btn-default-border:             @pm-bright;
 
-@nav-tabs-active-link-hover-color:        @spring-light-grey;
-@nav-tabs-active-link-hover-bg:           @spring-brown;
-@nav-tabs-active-link-hover-border-color: @spring-brown;
-@nav-tabs-border-color:                   @spring-brown;
+@nav-tabs-active-link-hover-color:        @pm-light;
+@nav-tabs-active-link-hover-bg:           @pm-verydark;
+@nav-tabs-active-link-hover-border-color: @pm-verydark;
+@nav-tabs-border-color:                   @pm-verydark;
 
-@pagination-active-bg:                    @spring-brown;
-@pagination-active-border:                @spring-green;
-@table-border-color:                      @spring-brown;
+@pagination-active-bg:                    @pm-dark;
+@pagination-active-border:                @pm-light;
+@table-border-color:                      @pm-dark;
+@table-header-color:                      @pm-dark;
 
 .table > thead > tr > th {
-  background-color: lighten(@spring-brown, 3%);
-  color: @spring-light-grey;
+  background-color: lighten(@table-header-color, 3%);
+  color: @pm-light;
 }
 
 .table-filter {
-  background-color: @spring-brown;
+  background-color: @table-header-color;
   padding: 9px 12px;
 }
 
@@ -76,8 +95,8 @@
   &:active,
   &.active,
   .open .dropdown-toggle& {
-    background-color: @spring-brown;
-    border-color: @spring-brown;
+    background-color: @pm-verydark;
+    border-color: @pm-verydark;
   }
 }
 
@@ -125,8 +144,8 @@ h1 {
 }
 
 .splash {
-  background: @spring-green;
-  color: @spring-brown;
+  background: @pm-normal;
+  color: @pm-verydark;
   display: none;
 }
 
@@ -196,12 +215,12 @@ table td.action-column {
 }
 
 .container-details-table th {
-  background-color: lighten(@spring-brown, 3%);
-  color: @spring-light-grey;
+  background-color: lighten(@pm-verydark, 3%);
+  color: @pm-light;
 }
 
 .status-help-content-table td {
-  color: @spring-brown;
+  color: @pm-verydark;
 }
 
 .alert-success {
@@ -231,7 +250,7 @@ table td.action-column {
 }
 
 hr {
-  border-top: 1px dotted @spring-brown;
+  border-top: 1px dotted @pm-verydark;
 }
 
 @import "typography.less";
