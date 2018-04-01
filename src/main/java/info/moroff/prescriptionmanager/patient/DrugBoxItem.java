@@ -1,6 +1,7 @@
 package info.moroff.prescriptionmanager.patient;
 
 import java.time.LocalDate;
+import java.time.Period;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -66,6 +67,25 @@ public class DrugBoxItem extends BaseEntity {
 		}
 	}
 	
+	/**
+	 * Returns the calculated amount
+	 * @return
+	 */
+	public Integer getAmount() {
+		if ( inventoryDate != null && inventoryAmount != null && daylyIntake != null ) {
+			Period period = Period.between(inventoryDate, LocalDate.now());
+			int daysSinceInventory = period.getDays();
+			
+			Double amount = inventoryAmount - Math.ceil(daylyIntake * daysSinceInventory);
+			
+//			System.out.println(inventoryDate + " / " + inventoryAmount + " / " + daysSinceInventory + " -> " + amount);
+			
+			return amount.intValue();
+		}
+		else {
+			return null;
+		}
+	}
 	// Setter-/Getters
 	public Patient getPatient() {
 		return patient;

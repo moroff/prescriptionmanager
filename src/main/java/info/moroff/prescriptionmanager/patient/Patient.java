@@ -62,7 +62,7 @@ public class Patient extends PersonWithAddress {
 
     public List<DrugBoxItem> getDrugBoxItems() {
         List<DrugBoxItem> sortedDrugBoxItems = new ArrayList<>(getDrugBoxItemsInternal());
-        PropertyComparator.sort(sortedDrugBoxItems, new MutableSortDefinition("exhaustingDate", true, true));
+        PropertyComparator.sort(sortedDrugBoxItems, new MutableSortDefinition("id", true, true));
         return Collections.unmodifiableList(sortedDrugBoxItems);
     }
 

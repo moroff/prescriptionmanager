@@ -1,51 +1,55 @@
 <!DOCTYPE html>
 
-<html xmlns:th="http://www.thymeleaf.org"
-  th:replace="~{fragments/layout :: layout (~{::body},'patients')}">
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'patients')}">
 
-  <body>
-  
-  
-    <h2 th:text="#{patientDetails}">Patient Information</h2>
-  
-    <table class="table table-striped" th:object="${patient}">
-      <tr>
-        <th>Name</th>
-        <td><b th:text="*{firstName + ' ' + lastName}"></b></td>
-      </tr>
-    </table>
-  
-    <a th:href="@{{id}/edit(id=${patient.id})}" class="btn btn-default" th:text="#{patientEdit}">Edit Patient</a>
-    <a th:href="@{{id}/drugs/new(id=${patient.id})}" class="btn btn-default" th:text="#{drugsAdd}">Add New Drug</a>
-  
-    <br />
-    <br />
-    <br />
-    <h2>Drugs</h2>
+<body>
 
-    <table class="table table-striped">
-  
-      <tr th:each="drugBoxItem : ${patient.drugBoxItems}">
-        <td valign="top">
-          <dl class="dl-horizontal">
-            <dt th:text="#{name}">Name</dt>
-            <dd th:text="${drugBoxItem.drugName}" /></dd>
-            <dt th:text="#{exhaustingDate}">Exhaust Date</dt>
-            <dd th:text="${#temporals.format(drugBoxItem.exhaustingDate, 'dd.MM.yyyy')}" /></dd>
-            <dt th:text="#{inventoryAmount}">Inventory Amount</dt>
-            <dd th:text="${drugBoxItem.inventoryAmount}" /></dd>
-          </dl>
-        </td>
-        <td valign="middle">
-          <a th:href="@{{patientId}/drugs/{drugId}/add(patientId=${patient.id},drugId=${drugBoxItem.id})}" class="btn btn-default" th:text="${drugBoxItem.drug.packageSize}">+XX</a>
-        </td>
-        <td valign="middle">
-          <a th:href="@{{patientId}/drugs/{drugId}/edit(patientId=${patient.id},drugId=${drugBoxItem.id})}" class="btn btn-default" th:text="#{edit}">Edit</a>
-        </td>
-      </tr>
-  
-    </table>
-  
-  </body>
+
+  <h2 th:text="#{patientDetails}">Patient Information</h2>
+
+  <table class="table table-striped" th:object="${patient}">
+    <tr>
+      <th>Name</th>
+      <td><b th:text="*{firstName + ' ' + lastName}"></b></td>
+    </tr>
+  </table>
+
+  <a th:href="@{{id}/edit(id=${patient.id})}" class="btn btn-default"><span th:text="#{patient}">Patient</span>&nbsp;<span
+    class="glyphicon glyphicon-edit" aria-hidden="true" /></a>
+  <a th:href="@{{id}/drugs/new(id=${patient.id})}" class="btn btn-default"><span th:text="#{drug}">Drug</span>&nbsp;<span
+    class="glyphicon glyphicon-plus-sign" aria-hidden="true" /></a>
+
+  <br />
+  <br />
+  <br />
+  <h2 th:text="#{drugs}">Drugs</h2>
+
+  <table class="table table-striped">
+
+    <tr th:each="drugBoxItem : ${patient.drugBoxItems}">
+      <td valign="top">
+        <dl class="dl-horizontal">
+          <dt th:text="#{name}">Name</dt>
+          <dd th:text="${drugBoxItem.drugName}" /></dd>
+          <dt th:text="#{exhaustingDate}">Exhaust Date</dt>
+          <dd th:text="${#temporals.format(drugBoxItem.exhaustingDate, 'dd.MM.yyyy')}" /></dd>
+          <dt th:text="#{amount}">Amount</dt>
+          <dd th:text="${drugBoxItem.amount}" /></dd>
+        </dl>
+      </td>
+      <td valign="top">
+        <div class="container-fluid">
+          <a th:href="@{{patientId}/drugs/{drugId}/add(patientId=${patient.id},drugId=${drugBoxItem.id})}"
+              class="btn btn-default">+<span th:text="${drugBoxItem.drug.packageSize}">XX</span></a>
+          &nbsp;    
+          <a th:href="@{{patientId}/drugs/{drugId}/edit(patientId=${patient.id},drugId=${drugBoxItem.id})}"
+            class="btn btn-default"><span class="glyphicon glyphicon-wrench" aria-hidden="true" /></a>
+        </div>
+      </td>
+    </tr>
+
+  </table>
+
+</body>
 
 </html>

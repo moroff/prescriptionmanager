@@ -92,4 +92,21 @@ class DrugBoxItemController {
 		}
 	}
 
+	@RequestMapping(value = "/drugs/{drugId}/add", method = RequestMethod.GET)
+	public String processAdd(@PathVariable("drugId") int drugId) {
+			DrugBoxItem drugBoxItem = this.drugBoxItems.findById(drugId);
+			if (drugBoxItem != null) {
+				Integer packageSize = drugBoxItem.getDrug().getPackageSize();
+				Integer oldAmount =  drugBoxItem.getAmount();
+				Integer newAmount = oldAmount + packageSize;
+				drugBoxItem.setInventoryAmount(newAmount.doubleValue());
+				drugBoxItem.setInventoryDate(LocalDate.now());
+				this.drugBoxItems.save(drugBoxItem);
+			}
+			else {
+				throw new IllegalStateException();
+			}
+			return "redirect:/patients/{patientId}";
+		}
+	
 }
