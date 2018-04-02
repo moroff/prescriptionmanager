@@ -2,6 +2,8 @@ package info.moroff.prescriptionmanager.patient;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -73,12 +75,11 @@ public class DrugBoxItem extends BaseEntity {
 	 */
 	public Integer getAmount() {
 		if ( inventoryDate != null && inventoryAmount != null && daylyIntake != null ) {
-			Period period = Period.between(inventoryDate, LocalDate.now());
-			int daysSinceInventory = period.getDays();
+			long daysSinceInventory = ChronoUnit.DAYS.between(getInventoryDate(), LocalDate.now());
 			
 			Double amount = inventoryAmount - Math.ceil(daylyIntake * daysSinceInventory);
 			
-//			System.out.println(inventoryDate + " / " + inventoryAmount + " / " + daysSinceInventory + " -> " + amount);
+			System.out.println(inventoryDate + " / " + inventoryAmount + " / " + daysSinceInventory + " -> " + amount);
 			
 			return amount.intValue();
 		}
@@ -86,6 +87,21 @@ public class DrugBoxItem extends BaseEntity {
 			return null;
 		}
 	}
+	
+	public Integer getRemainingDays() {
+		if ( getExhaustingDate() != null ) {
+			return new Integer((int) ChronoUnit.DAYS.between(LocalDate.now(), getExhaustingDate()));
+		}
+		else {
+			return null;
+		}
+	}
+	
+//	public String getFlag() {
+//		String icon = "glyphicon glyphicon-flag";
+//		
+//		
+//	}
 	// Setter-/Getters
 	public Patient getPatient() {
 		return patient;
