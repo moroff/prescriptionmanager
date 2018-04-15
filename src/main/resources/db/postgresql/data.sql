@@ -14,6 +14,8 @@ INSERT INTO drugs (id, name, package_size) VALUES (11, 'VALSACOR COP 80/12.5MG, 
 INSERT INTO drugs (id, name, package_size) VALUES (12, 'TORASEMID AL 10MG TABL, TAB', 100) ON CONFLICT DO NOTHING;
 INSERT INTO drugs (id, name, package_size) VALUES (13, 'PRADAXA 110MG, HKP', 100) ON CONFLICT DO NOTHING;
 INSERT INTO drugs (id, name, package_size) VALUES (14, 'PROCORALAN 5MG FILMTABL, FTA', 100) ON CONFLICT DO NOTHING;
+INSERT INTO drugs (id, name, package_size) VALUES (15, 'ALLOPURINAL ABZ 100MG TABL', 100) ON CONFLICT DO NOTHING;
+INSERT INTO drugs (id, name, package_size) VALUES (16, 'NOVAMINSULFON LICHTENSTEIN 500MG', 100) ON CONFLICT DO NOTHING;
 
 INSERT INTO patients (id, first_name, last_name) VALUES (1, 'Inge', 'S.') ON CONFLICT DO NOTHING; 
 INSERT INTO patients (id, first_name, last_name) VALUES (2, 'Rolf', 'S.') ON CONFLICT DO NOTHING; 
@@ -34,6 +36,8 @@ INSERT INTO drugbox (id, dayly_intake, inventory_amount, inventory_date, drug_id
 INSERT INTO drugbox (id, dayly_intake, inventory_amount, inventory_date, drug_id, patient_id)  VALUES (12, 3.0, 50, '2018-02-01', 12, 2) ON CONFLICT DO NOTHING;
 INSERT INTO drugbox (id, dayly_intake, inventory_amount, inventory_date, drug_id, patient_id)  VALUES (13, 2.0, 50, '2018-02-01', 13, 2) ON CONFLICT DO NOTHING;
 INSERT INTO drugbox (id, dayly_intake, inventory_amount, inventory_date, drug_id, patient_id)  VALUES (14, 2.0, 50, '2018-02-01', 14, 2) ON CONFLICT DO NOTHING;
+INSERT INTO drugbox (id, dayly_intake, inventory_amount, inventory_date, drug_id, patient_id)  VALUES (15, 2.0, 50, '2018-04-04', 15, 2) ON CONFLICT DO NOTHING;
+INSERT INTO drugbox (id, dayly_intake, inventory_amount, inventory_date, drug_id, patient_id)  VALUES (16, 2.0, 50, '2018-04-04', 16, 2) ON CONFLICT DO NOTHING;
 
 -- DIETER
 INSERT INTO drugbox (id, dayly_intake, inventory_amount, inventory_date, drug_id, patient_id)  VALUES (1, 1.0, 75, '2018-02-01', 1, 4) ON CONFLICT DO NOTHING;
