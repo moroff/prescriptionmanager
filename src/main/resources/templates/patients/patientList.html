@@ -10,12 +10,14 @@
   <table id="patients" class="table table-striped">
     <thead>
       <tr>
+        <th>&nbsp;</th>
         <th th:text="#{name}">Name</th>
         <th th:text="#{exhaustingDate}">First exhausting date</th>
       </tr>
     </thead>
     <tbody>
       <tr th:each="patient : ${patients.patientList}">
+        <td><span th:class="${uitools.getLabelForRemainingDays(patient.remainingDays)}">&nbsp;<!--  th:text="${patient.remainingDays}">N/A --></span></td>
         <td><a th:href="@{/patients/__${patient.id}__}"><div th:text="|${patient.firstName} ${patient.lastName}|">Edit</div></a></td>
         <td th:text="${#temporals.format(patient.exhaustingDate, 'dd.MM.yyyy')}"></td>
       </tr>

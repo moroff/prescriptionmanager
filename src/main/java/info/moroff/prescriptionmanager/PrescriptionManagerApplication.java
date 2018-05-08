@@ -9,6 +9,8 @@ import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
 
+import info.moroff.prescriptionmanager.ui.UITools;
+
 @SpringBootApplication
 public class PrescriptionManagerApplication {
 
@@ -26,5 +28,10 @@ public class PrescriptionManagerApplication {
 	    SessionLocaleResolver slr = new SessionLocaleResolver();
 	    slr.setDefaultLocale(Locale.GERMAN);
 	    return slr;
+	}
+	
+	@Bean
+	public UITools uiTools() {
+		return new UITools();
 	}
 }

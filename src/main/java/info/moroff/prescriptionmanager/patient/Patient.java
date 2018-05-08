@@ -82,6 +82,16 @@ public class Patient extends PersonWithAddress {
     		return null;
     }
     
+    public Integer getRemainingDays() {
+    	Optional<Integer> minDays = getDrugBoxItemsInternal().stream().map(DrugBoxItem::getRemainingDays).min(Patient::compare);
+    	
+    	if ( minDays.isPresent() ) 
+    		return minDays.get();
+    	else
+    		return null;
+    	
+    }
+    
     static int compare(LocalDate op1, LocalDate op2) {
     	if ( op1 == null && op2 == null ) 
     		return 0;
@@ -92,7 +102,18 @@ public class Patient extends PersonWithAddress {
     	else
     		return op1.compareTo(op2);
     }
-    
+
+    static int compare(Integer op1, Integer op2) {
+    	if ( op1 == null && op2 == null ) 
+    		return 0;
+    	else if ( op1 == null ) 
+    		return 1;
+    	else if ( op2 == null )
+    		return -1;
+    	else
+    		return op1.compareTo(op2);
+    }
+
     /**
      * Return the DrugBoxItem with the given drug name, or null if none found for this patient.
      *

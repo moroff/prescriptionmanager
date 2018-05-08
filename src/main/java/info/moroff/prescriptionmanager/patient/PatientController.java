@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import info.moroff.prescriptionmanager.ui.UITools;
+
 @Controller
 class PatientController {
 
@@ -25,11 +27,15 @@ class PatientController {
         this.patients = clinicService;
     }
 
+    @Autowired
+    private UITools uiTools;
+    
     @RequestMapping(value = { "/patients.html" })
     public String showPatientList(Map<String, Object> model) {
         // Here we are returning an object of type 'Patients' rather than a collection of Patient
         // objects so it is simpler for Object-Xml mapping
         model.put("patients", showResourcesPatientList());
+        model.put("uitools", uiTools);
         return "patients/patientList";
     }
 
@@ -43,9 +49,10 @@ class PatientController {
     }
     
     @RequestMapping(value = "/patients/{patientId}", method = RequestMethod.GET)
-    public String viewPatientDetailsForm(@PathVariable("patientId") int patientId, Model model) {
+    public String viewPatientDetailsForm(@PathVariable("patientId") int patientId, Map<String, Object>  model) {
         Patient patient = this.patients.findById(patientId);
-        model.addAttribute(patient);
+        model.put("patient", patient);
+        model.put("uitools", uiTools);
         return VIEWS_PATIENT_DETAILS_FORM;
     }
 
