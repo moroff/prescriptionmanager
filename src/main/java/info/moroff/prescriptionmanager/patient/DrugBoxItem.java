@@ -47,7 +47,7 @@ public class DrugBoxItem extends BaseEntity {
 	/**
 	 * Daily intake of this drug
 	 */
-	@DecimalMin(value="0.25")
+	@DecimalMin(value="0.0")
 	private Double daylyIntake;
 
 	// Business logic
@@ -59,13 +59,13 @@ public class DrugBoxItem extends BaseEntity {
 	 * Returns the date when the inventory is exhausted.
 	 */
 	public LocalDate getExhaustingDate() {
-		if ( inventoryDate != null && inventoryAmount != null && daylyIntake != null ) {
+		if ( inventoryDate != null && inventoryAmount != null && daylyIntake > 0.0 ) {
 			Double remainingDays = Math.floor(inventoryAmount / daylyIntake);
 			
 			return inventoryDate.plusDays(remainingDays.longValue());
 		}
 		else {
-			return null;
+			return LocalDate.of(2222, 12, 31);
 		}
 	}
 	

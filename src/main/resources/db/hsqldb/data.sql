@@ -15,7 +15,12 @@ INSERT INTO drugs (id, name, package_size, pzn) VALUES
 (11, 'VALSACOR COP 80/12.5MG, FTA', 100, ''),
 (12, 'TORASEMID AL 10MG TABL, TAB', 100, ''),
 (13, 'PRADAXA 110MG, HKP', 100, ''),
-(14, 'PROCORALAN 5MG FILMTABL, FTA', 100, '');
+(14, 'PROCORALAN 5MG FILMTABL, FTA', 100, ''),
+(15, 'ALLOPURINAL ABZ 100MG TABL', 100, ''),
+(16, 'NOVAINSULFON LICHTENSTEIN 500MG', 100, ''),
+(17, 'PREDNISOLON ACIS 10MG', 100, ''),
+(18, 'PANTOPRAZOL ARISTO 20MG TABL', 100, ''),
+(19, 'METOPROLOL_RATIOPHARM SUCCINAT 47,5MG TABL', 100, '');
 
 -- Patients
 INSERT INTO patients (id, first_name, last_name) VALUES 
@@ -39,6 +44,11 @@ INSERT INTO drugbox (id, dayly_intake, inventory_amount, inventory_date, drug_id
 (12, 3.0, 50, '2018-02-01', 12, 2),
 (13, 2.0, 50, '2018-02-01', 13, 2),
 (14, 2.0, 50, '2018-02-01', 14, 2),
+(15, 2.0, 50, '2018-04-04', 15, 2),
+(16, 2.0, 50, '2018-04-04', 16, 2),
+(17, 1.0, 50, '2018-04-04', 17, 2),
+(18, 0.5, 50, '2018-04-04', 18, 2),
+(19, 0.5, 50, '2018-04-04', 19, 2),
 
 -- DIETER
 (1, 1.0, 75, '2018-02-01', 1, 4),
