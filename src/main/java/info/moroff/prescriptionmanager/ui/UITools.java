@@ -1,7 +1,13 @@
 package info.moroff.prescriptionmanager.ui;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 public class UITools {
 
+	private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+	
+	
 	public String getLabelForRemainingDays(Integer remainingDays) {
 		if (remainingDays == null) {
 			return "";
@@ -11,7 +17,15 @@ public class UITools {
 			return "label label-warning";
 		} else {
 			return "label label-danger";
-
+		}
+	}
+	
+	public String formatDate(LocalDate date) {
+		if ( date == null) {
+			return "";
+		}
+		else {
+			return date.format(formatter);
 		}
 	}
 }

@@ -35,7 +35,7 @@
           <dt th:text="#{name}">Name</dt>
           <dd th:text="${drugBoxItem.drugName}" /></dd>
           <dt th:text="#{exhaustingDate}">Exhaust Date</dt>
-          <dd th:text="${#temporals.format(drugBoxItem.exhaustingDate, 'dd.MM.yyyy')}" /></dd>
+          <dd th:text="${uitools.formatDate(drugBoxItem.exhaustingDate)}" /></dd>
           <dt th:text="#{amount}">Amount</dt>
           <dd th:text="${drugBoxItem.amount}" /></dd>
         </dl>

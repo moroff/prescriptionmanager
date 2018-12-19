@@ -65,7 +65,7 @@ public class DrugBoxItem extends BaseEntity {
 			return inventoryDate.plusDays(remainingDays.longValue());
 		}
 		else {
-			return LocalDate.of(2222, 12, 31);
+			return null;
 		}
 	}
 	
