@@ -3,6 +3,7 @@ package info.moroff.prescriptionmanager.patient;
 import java.time.LocalDate;
 import java.util.Optional;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,7 +24,8 @@ class DrugBoxItemController {
 	private static final String VIEWS_DRUGS_DETAILS_FORM = "patients/drugsDetails";
 	private final PatientRepository patients;
 	private DrugBoxItemRepository drugBoxItems;
-
+	private final Logger logger = Logger.getLogger(getClass());
+	
 	@Autowired
 	public DrugBoxItemController(PatientRepository patients, DrugBoxItemRepository drugBoxItems) {
 		this.patients = patients;
@@ -55,7 +57,12 @@ class DrugBoxItemController {
 	@RequestMapping(value = "/drugs/{drugId}/edit", method = RequestMethod.GET)
 	public String editPatientDetailsForm(Patient patient, @PathVariable("drugId") int drugId, Model model) {
 		DrugBoxItem drugBoxItem = drugBoxItems.findById(drugId);
+		double oldAmount = drugBoxItem.getAmount().doubleValue();
+
 		drugBoxItem.setInventoryDate(LocalDate.now());
+		drugBoxItem.setInventoryAmount(oldAmount > 0 ? oldAmount : 0);
+		
+		logger.info("set drugbox item inventory amount to "+drugBoxItem.getInventoryAmount());
 		model.addAttribute("drugBoxItem", drugBoxItem);
 		return VIEWS_DRUGS_CREATE_OR_UPDATE_FORM;
 	}
@@ -98,9 +105,11 @@ class DrugBoxItemController {
 			if (drugBoxItem != null) {
 				Integer packageSize = drugBoxItem.getDrug().getPackageSize();
 				Integer oldAmount =  drugBoxItem.getAmount();
-				Integer newAmount = oldAmount + packageSize;
+				Integer newAmount = oldAmount < 0 ? packageSize : oldAmount + packageSize;
 				drugBoxItem.setInventoryAmount(newAmount.doubleValue());
 				drugBoxItem.setInventoryDate(LocalDate.now());
+
+				logger.info("set drugbox item inventory amount to "+drugBoxItem.getInventoryAmount());
 				this.drugBoxItems.save(drugBoxItem);
 			}
 			else {
