@@ -1,0 +1,70 @@
+<html xmlns:th="http://www.thymeleaf.org"
+  th:replace="~{fragments/layout :: layout (~{::body},'patients')}">
+
+<body>
+
+  <h2 th:text="#{therapyPrescription}">Therapy prescription</h2>
+  <form th:object="${therapyPrescription}" class="form-horizontal" id="add-therapy-form" method="post">
+    <div class="form-group has-feedback">
+      <input
+        th:replace="~{fragments/inputField :: input ('Description', 'name')}" />
+      <input
+        th:replace="~{fragments/inputField :: input ('Number of therapies', 'count')}" />
+      <input
+        th:replace="~{fragments/inputField :: input ('Prescription Date', 'prescriptionDate')}" />
+      <input
+        th:replace="~{fragments/inputField :: input ('First Therapy Date', 'firstTherapyDate')}" />
+      <input
+        th:replace="~{fragments/inputField :: input ('Next Prescription Date', 'nextPrescription')}" />
+      <label class="col-sm-2 control-label" th:text="#{daysOfWeek}">Days of week</label>  
+      <label><input th:field="*{onMondays}" type="checkbox"> Mo</label>
+      <label><input th:field="*{onTuesdays}" type="checkbox"> Di</label>
+      <label><input th:field="*{onWednesdays}" type="checkbox"> Mi</label>
+      <label><input th:field="*{onThursdays}" type="checkbox"> Do</label>
+      <label><input th:field="*{onFridays}" type="checkbox"> Fr</label>
+    </div>
+    
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <input
+          th:with="text=${therapyPrescription['new']} ? 'therapyAdd' : 'therapyUpdate'" th:value="#{${text}}"
+          class="btn btn-default" type="submit" name="save"/>
+        <input
+          th:value="#{addAppointments}"
+          class="btn btn-default" type="submit" name="addAppointments" value="AddAppointments"/>
+        <input
+          th:value="#{deleteAppointments}"
+          class="btn btn-default" type="submit" name="deleteAppointments" value="DeleteAppointments"/>
+      </div>
+    </div>
+  </form>
+  
+   <h2 th:text="#{appointments}">Therapy appointments</h2>
+
+  <table class="table table-striped">
+
+    <tr th:each="appointment : ${therapyPrescription.appointments}">
+    <!-- 
+      <td><span th:class="${uitools.getLabelForRemainingDays(appointment.date)}">&nbsp;</span></td>
+     -->
+      <td valign="middle">
+        <dl class="dl-horizontal">
+          <dt th:text="${#temporals.format(appointment.date, 'E dd.MM.yyyy')}" /></dt>
+        </dl>
+      </td>
+      <td valign="top">
+        <div class="container-fluid">
+          <a th:href="@{appointments/{appointmentId}/move(direction=-1,appointmentId=${appointment.id})}"
+            ><span class="glyphicon glyphicon-circle-arrow-up" aria-hidden="true" /></a>
+           &nbsp; 
+          <a th:href="@{appointments/{appointmentId}/move(direction=1,appointmentId=${appointment.id})}"
+            ><span class="glyphicon glyphicon-circle-arrow-down" aria-hidden="true" /></a>
+           &nbsp; 
+          <a th:href="@{appointments/{appointmentId}/moveToEnd(appointmentId=${appointment.id})}"
+            ><span class="glyphicon glyphicon-remove-sign" aria-hidden="true" /></a>
+        </div>
+      </td>
+    </tr>
+  </table> 
+</body>
+</html>

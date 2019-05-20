@@ -20,9 +20,9 @@
   <a th:href="@{{id}/drugs/new(id=${patient.id})}" class="btn btn-default"><span th:text="#{drug}">Drug</span>&nbsp;<span
     class="glyphicon glyphicon-plus-sign" aria-hidden="true" /></a>
  -->
+  <a th:href="@{{id}/prescriptions/new(id=${patient.id})}" class="btn btn-default"><span th:text="#{therapy}">Therapy</span>&nbsp;<span
+    class="glyphicon glyphicon-plus-sign" aria-hidden="true" /></a>
 
-  <br />
-  <br />
   <br />
   <h2 th:text="#{drugs}">Drugs</h2>
 
@@ -46,6 +46,39 @@
               class="btn btn-default">+<span th:text="${drugBoxItem.drug.packageSize}">XX</span></a>
           &nbsp;    
           <a th:href="@{{patientId}/drugs/{drugId}/edit(patientId=${patient.id},drugId=${drugBoxItem.id})}"
+            class="btn btn-default"><span class="glyphicon glyphicon-wrench" aria-hidden="true" /></a>
+        </div>
+      </td>
+    </tr>
+
+  <tr>
+    <td colspan="4"><h2 th:text="#{therapies}">Therapy prescriptions</h2></td>
+  </tr>
+
+    <tr th:each="prescription : ${patient.prescriptions}">
+      <td><span th:class="${uitools.getLabelForRemainingDays(prescription.nextPrescription)}">&nbsp;</span></td>
+      <td valign="top">
+        <dl class="dl-horizontal">
+          <dt th:text="#{name}">Name</dt>
+          <dd th:text="${prescription.name}" /></dd>
+          <dt th:text="#{prescriptionDate}">Prescription Date</dt>
+          <dd th:text="${#temporals.format(prescription.prescriptionDate, 'dd.MM.yyyy')}" /></dd>
+          <dt th:text="#{nextPrescription}">Next Prescription Date</dt>
+          <dd th:text="${#temporals.format(prescription.nextPrescription, 'dd.MM.yyyy')}" /></dd>
+<!-- 
+          <dt th:text="#{exhaustingDate}">Exhaust Date</dt>
+          <dd th:text="${#temporals.format(prescription.exhaustingDate, 'dd.MM.yyyy')}" /></dd>
+          <dt th:text="#{amount}">Amount</dt>
+          <dd th:text="${prescription.amount}" /></dd>
+ -->          
+        </dl>
+      </td>
+      <td valign="top">
+        <div class="container-fluid">
+          <a th:href="@{{patientId}/prescriptions/{prescriptionId}/add(patientId=${patient.id},prescriptionId=${prescription.id})}"
+              class="btn btn-default">+<span th:text="${prescription.count}">XX</a>
+          &nbsp;    
+          <a th:href="@{{patientId}/prescriptions/{prescriptionId}/edit(patientId=${patient.id},prescriptionId=${prescription.id})}"
             class="btn btn-default"><span class="glyphicon glyphicon-wrench" aria-hidden="true" /></a>
         </div>
       </td>
