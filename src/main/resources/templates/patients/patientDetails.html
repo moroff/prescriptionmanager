@@ -20,7 +20,7 @@
   <a th:href="@{{id}/drugs/new(id=${patient.id})}" class="btn btn-default"><span th:text="#{drug}">Drug</span>&nbsp;<span
     class="glyphicon glyphicon-plus-sign" aria-hidden="true" /></a>
  -->
-  <a th:href="@{{id}/prescriptions/new(id=${patient.id})}" class="btn btn-default"><span th:text="#{therapy}">Therapy</span>&nbsp;<span
+  <a th:href="@{{id}/therapy/new(id=${patient.id})}" class="btn btn-default"><span th:text="#{therapy}">Therapy</span>&nbsp;<span
     class="glyphicon glyphicon-plus-sign" aria-hidden="true" /></a>
 
   <br />
@@ -55,17 +55,19 @@
     <td colspan="4"><h2 th:text="#{therapies}">Therapy prescriptions</h2></td>
   </tr>
 
-    <tr th:each="prescription : ${patient.prescriptions}">
-      <td><span th:class="${uitools.getLabelForRemainingDays(prescription.nextPrescription)}">&nbsp;</span></td>
+    <tr th:each="therapy : ${patient.therapies}">
+    <!-- 
+      <td><span th:class="${uitools.getLabelForRemainingDays(therapy.nextPrescription)}">&nbsp;</span></td>
+     -->
       <td valign="top">
         <dl class="dl-horizontal">
           <dt th:text="#{name}">Name</dt>
-          <dd th:text="${prescription.name}" /></dd>
-          <dt th:text="#{prescriptionDate}">Prescription Date</dt>
-          <dd th:text="${#temporals.format(prescription.prescriptionDate, 'dd.MM.yyyy')}" /></dd>
-          <dt th:text="#{nextPrescription}">Next Prescription Date</dt>
-          <dd th:text="${#temporals.format(prescription.nextPrescription, 'dd.MM.yyyy')}" /></dd>
+          <dd th:text="${therapy.name}" /></dd>
 <!-- 
+          <dt th:text="#{prescriptionDate}">Prescription Date</dt>
+          <dd th:text="${#temporals.format(therapy.lastPrescriptionDate, 'dd.MM.yyyy')}" /></dd>
+          <dt th:text="#{nextPrescription}">Next Prescription Date</dt>
+          <dd th:text="${#temporals.format(therapy.nextPrescription, 'dd.MM.yyyy')}" /></dd>
           <dt th:text="#{exhaustingDate}">Exhaust Date</dt>
           <dd th:text="${#temporals.format(prescription.exhaustingDate, 'dd.MM.yyyy')}" /></dd>
           <dt th:text="#{amount}">Amount</dt>
@@ -75,10 +77,12 @@
       </td>
       <td valign="top">
         <div class="container-fluid">
-          <a th:href="@{{patientId}/prescriptions/{prescriptionId}/add(patientId=${patient.id},prescriptionId=${prescription.id})}"
+        <!-- 
+          <a th:href="@{{patientId}/therapies/{therapyId}/add(patientId=${patient.id},therapyId=${therapy.id})}"
               class="btn btn-default">+<span th:text="${prescription.count}">XX</a>
           &nbsp;    
-          <a th:href="@{{patientId}/prescriptions/{prescriptionId}/edit(patientId=${patient.id},prescriptionId=${prescription.id})}"
+         -->
+          <a th:href="@{{patientId}/therapies/{therapyId}/edit(patientId=${patient.id},therapyId=${therapy.id})}"
             class="btn btn-default"><span class="glyphicon glyphicon-wrench" aria-hidden="true" /></a>
         </div>
       </td>

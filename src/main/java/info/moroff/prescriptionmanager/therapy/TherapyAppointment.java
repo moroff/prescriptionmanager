@@ -16,9 +16,10 @@ import info.moroff.prescriptionmanager.model.BaseEntity;
 @Table(name = "therapy_appointment")
 public class TherapyAppointment extends BaseEntity {
 
-	@ManyToOne(fetch=FetchType.LAZY, optional=false)
-	@JoinColumn(name="prescription_id", updatable=false, nullable=false)
+	@ManyToOne(fetch=FetchType.LAZY, optional=true)
+	@JoinColumn(name="prescription_id", updatable=true, nullable=true)
 	private TherapyPrescription prescription;
+	
 	public TherapyPrescription getPrescription() {
 		return prescription;
 	}
@@ -26,6 +27,17 @@ public class TherapyAppointment extends BaseEntity {
 		this.prescription = prescription;
 	}
 	
+	@ManyToOne(fetch=FetchType.LAZY, optional=false)
+	@JoinColumn(name="therapy_id", updatable=false, nullable=false)
+	private Therapy therapy;
+	
+	public Therapy getTherapy() {
+		return therapy;
+	}
+	public void setTherapy(Therapy therapy) {
+		this.therapy = therapy;
+	}
+
 	@Column(name="date")
 	LocalDate date;
 	public LocalDate getDate() {

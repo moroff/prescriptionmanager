@@ -21,7 +21,7 @@ import org.springframework.beans.support.PropertyComparator;
 import org.springframework.core.style.ToStringCreator;
 
 import info.moroff.prescriptionmanager.model.PersonWithAddress;
-import info.moroff.prescriptionmanager.therapy.TherapyPrescription;
+import info.moroff.prescriptionmanager.therapy.Therapy;
 
 /**
  * Simple JavaBean domain object representing a patient.
@@ -42,7 +42,7 @@ public class Patient extends PersonWithAddress {
     private Set<DrugBoxItem> drugBoxItems;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "patient", fetch=FetchType.EAGER)
-    private Set<TherapyPrescription> prescriptions;
+    private Set<Therapy> therapies;
 
     public String getTelephone() {
         return this.telephone;
@@ -69,17 +69,17 @@ public class Patient extends PersonWithAddress {
         return Collections.unmodifiableList(sortedDrugBoxItems);
     }
 
-    public List<TherapyPrescription> getPrescriptions() {
-        List<TherapyPrescription> sortedItems = new ArrayList<>(getPrescriptionInternal());
+    public List<Therapy> getTherapies() {
+        List<Therapy> sortedItems = new ArrayList<>(getTherapyInternal());
         PropertyComparator.sort(sortedItems, new MutableSortDefinition("id", true, true));
         return Collections.unmodifiableList(sortedItems);
     }
     
-    protected Set<TherapyPrescription> getPrescriptionInternal() {
-		if (this.prescriptions == null) {
-			this.prescriptions = new HashSet<>();
+    protected Set<Therapy> getTherapyInternal() {
+		if (this.therapies == null) {
+			this.therapies = new HashSet<>();
 		}
-		return this.prescriptions;
+		return this.therapies;
 	}
 
 	public void addDrugBoxItem(DrugBoxItem drugBoxItem) {

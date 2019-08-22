@@ -6,11 +6,14 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -18,6 +21,7 @@ import org.springframework.beans.support.MutableSortDefinition;
 import org.springframework.beans.support.PropertyComparator;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import info.moroff.prescriptionmanager.model.BaseEntity;
 import info.moroff.prescriptionmanager.model.Periodicity;
 import info.moroff.prescriptionmanager.model.Prescription;
 import info.moroff.prescriptionmanager.patient.DrugBoxItem;
@@ -31,19 +35,17 @@ import info.moroff.prescriptionmanager.patient.DrugBoxItem;
 @SuppressWarnings("serial")
 @Entity
 @Table(name = "therapy_prescription")
-public class TherapyPrescription extends Prescription {
+public class TherapyPrescription extends BaseEntity {
 
-	/**
-	 * Prescription name.
-	 */
-	String name;
+	@ManyToOne(fetch=FetchType.LAZY, optional=false)
+	@JoinColumn(name="therapy_id", updatable=false, nullable=false)
+	private Therapy therapy;
 
-	public String getName() {
-		return name;
+	public Therapy getTherapy() {
+		return therapy;
 	}
-
-	public void setName(String name) {
-		this.name = name;
+	public void setTherapy(Therapy therapy) {
+		this.therapy = therapy;
 	}
 
 	/**
@@ -172,7 +174,7 @@ public class TherapyPrescription extends Prescription {
 		this.onFridays = onFridays;
 	}
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "prescription", fetch = FetchType.EAGER, orphanRemoval = true)
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "prescription", fetch = FetchType.EAGER, orphanRemoval = false)
 	private Set<TherapyAppointment> appointments;
 
 	protected Set<TherapyAppointment> getAppointmentsInternal() {
@@ -183,11 +185,28 @@ public class TherapyPrescription extends Prescription {
 	}
 
 	public List<TherapyAppointment> getAppointments() {
-		List<TherapyAppointment> sortedDrugBoxItems = new ArrayList<>(getAppointmentsInternal());
-		PropertyComparator.sort(sortedDrugBoxItems, new MutableSortDefinition("date", true, true));
-		return Collections.unmodifiableList(sortedDrugBoxItems);
+		List<TherapyAppointment> items = new ArrayList<>(getAppointmentsInternal());
+		List<TherapyAppointment> sorted = items.stream().//
+				filter(a -> a.getPrescription() == this).//
+				sorted((a1, a2) -> compareDate(a1.getDate(),a2.getDate())).//
+				collect(Collectors.toList());
+		return Collections.unmodifiableList(sorted);
 	}
 
+	public static int compareDate(LocalDate d1, LocalDate d2) {
+		if ( d1 == null && d2 == null ) {
+			return 0;
+		}
+		else if ( d1 == null && d2 != null ) {
+			return 1;
+		}
+		else if ( d1 != null && d2 == null ) {
+			return -1;
+		}
+		else {
+			return d1.compareTo(d2);
+		}
+	}
 	public void addAppointment(TherapyAppointment appointment) {
 		if (appointment.isNew()) {
 			getAppointmentsInternal().add(appointment);
@@ -199,15 +218,14 @@ public class TherapyPrescription extends Prescription {
 		getAppointmentsInternal().remove(appointment);
 	}
 
-	private int dayOffset[][] = {
-			{ 7, 1, 2, 3, 4 }, // MONDAY
-			{ 6, 7, 1, 2, 3 }, // TUESDAY
-			{ 5, 6, 7, 1, 2 }, // WEDNESDAY
-			{ 4, 5, 6, 7, 1 }, // THURSDAY
-			{ 3, 4, 5, 6, 7 }, // FRIDAY
-			{ 2, 3, 4, 5, 6 }, // SATUDAY
-			{ 1, 2, 3, 4, 5 }, // SUNDAY
-	};
+	public List<String> getPeriodicities() {
+		List<String> periodicities = new ArrayList<>();
+		
+		for (Periodicity string : Periodicity.values()) {
+			periodicities.add(Integer.toString(string.getValue()));
+		}
+		return periodicities;
+	}
 	
 	public LocalDate getNextWeekDay(LocalDate currentDate) {
 		if (onMondays || onTuesdays || onWednesdays || onThursdays || onFridays) {
@@ -335,7 +353,7 @@ public class TherapyPrescription extends Prescription {
 			
 			throw new IllegalStateException("Check implementation for "+currentDate.getDayOfWeek());
 		} else {
-			return currentDate.plusDays(7);
+			return null;
 		}
 	}
 

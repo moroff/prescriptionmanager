@@ -76,14 +76,14 @@
       </div>
   </nav>
   <div class="container-fluid">
-      <div class="container xd-container">
-  
-          <div th:replace="${template}"/>
-
-        <br/>
-        <br/>
-        
+    <div class="container xd-container">
+      <div th:if="${patient}">
+        <h1><a th:href="@{/patients/{patientId}(patientId=${patient.id})}" th:text="*{patient.firstName + ' ' + patient.lastName}"></a></h1>
       </div>
+
+      <div th:replace="${template}" />
+      <br />
+    </div>
   </div>
 
   <script th:src="@{/webjars/jquery/jquery.min.js}"></script>

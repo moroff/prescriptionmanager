@@ -1,10 +1,6 @@
 package info.moroff.prescriptionmanager.therapy;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.temporal.TemporalUnit;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -34,15 +30,21 @@ import info.moroff.prescriptionmanager.ui.UITools;
 public class TherapyPrescriptionController {
 	private Logger logger = Logger.getLogger(getClass());
 	private final PatientRepository patientRepository;
+	private TherapyRepository therapyRepository;
 	private TherapyPrescriptionRepository prescriptionRepository;
 	private TherapyAppointmentRepository appointmentRepository;
 
-    @Autowired
-    public TherapyPrescriptionController(PatientRepository patientRepository, TherapyPrescriptionRepository prescriptionRepository, TherapyAppointmentRepository appointmentRepository) {
-        this.patientRepository = patientRepository;
-        this.prescriptionRepository = prescriptionRepository;
+	@Autowired
+	private TherapyViewState viewState;
+
+	@Autowired
+	public TherapyPrescriptionController(PatientRepository patientRepository, TherapyRepository therapyRepository,
+			TherapyPrescriptionRepository prescriptionRepository, TherapyAppointmentRepository appointmentRepository) {
+		this.patientRepository = patientRepository;
+		this.therapyRepository = therapyRepository;
+		this.prescriptionRepository = prescriptionRepository;
 		this.appointmentRepository = appointmentRepository;
-    }
+	}
 
 	@ModelAttribute("patient")
 	public Patient findPatient(@PathVariable("patientId") int patientId) {
@@ -54,164 +56,272 @@ public class TherapyPrescriptionController {
 		dataBinder.setDisallowedFields("id");
 	}
 
-    @Autowired
-    private UITools uiTools;
+	@Autowired
+	private UITools uiTools;
 
-    @RequestMapping(value = "/prescriptions/new", method = RequestMethod.GET)
-    public String initUpdatePatientForm(@PathVariable("patientId") int patientId, Map<String, Object> model) {
-        TherapyPrescription therapyPrescription = new TherapyPrescription();
-        
-        therapyPrescription.setCount(10);
-        therapyPrescription.setPrescriptionDate(LocalDate.now());
-        therapyPrescription.setPeriodicity(Periodicity.WEEKLY);
-        
-        model.put("therapyPrescription", therapyPrescription);
-        model.put("uitools", uiTools);
+	@RequestMapping(value = "/therapy/new", method = RequestMethod.GET)
+	public String initUpdatePatientForm(@PathVariable("patientId") int patientId, Map<String, Object> model) {
+		Therapy therapy = new Therapy();
+		TherapyPrescription prescription = new TherapyPrescription();
 
-        return "patients/createOrUpdateTherapyForm";
-    }
+		therapy.addPrescription(prescription);
+		prescription.setPrescriptionDate(LocalDate.now());
 
-    @RequestMapping(value = "/prescriptions/new", method = RequestMethod.POST)
-	public String processNewForm(@Valid TherapyPrescription therapy, BindingResult result, Patient patient, ModelMap model) {
-        if (result.hasErrors()) {
-            return "patients/createOrUpdateTherapyForm";
-        } else {
-        	therapy.setPatient(patient);
-        	LocalDate nextTherapyDate = therapy.getFirstTherapyDate();
-        	for (int i = 0; i < therapy.getCount(); i++) {
-				nextTherapyDate = calcNextDate(therapy, nextTherapyDate);
+		model.put("therapy", therapy);
+		model.put("prescription", prescription);
+		model.put("uitools", uiTools);
+
+		return "patients/createOrUpdateTherapyForm";
+	}
+
+	@RequestMapping(value = "/therapy/new", method = RequestMethod.POST)
+	public String processNewForm(@Valid @ModelAttribute("therapy") Therapy therapy, BindingResult therapyResult,
+			@Valid @ModelAttribute("prescription") TherapyPrescription prescription, BindingResult prescriptionResult,
+			Patient patient, ModelMap model) {
+		if (prescriptionResult.hasErrors()) {
+			return "patients/createOrUpdateTherapyForm";
+		} else {
+			therapy.setPatient(patient);
+			therapy.addPrescription(prescription);
+			this.therapyRepository.save(therapy);
+			return "redirect:/patients/" + patient.getId() + "/therapies/" + therapy.getId() + "/edit";
+
+		}
+	}
+
+	@RequestMapping(value = "/therapies/{therapyId}/edit", method = RequestMethod.GET)
+	public String editPatientDetailsForm(@PathVariable("therapyId") int therapyId, Model model) {
+		Therapy therapy = therapyRepository.findById(therapyId);
+		model.addAttribute("therapy", therapy);
+		if (viewState.getTherapyId() != therapyId || viewState.getPrescriptionId() == 0) {
+			viewState.setPrescriptionId(therapy.getPrescription() != null ? therapy.getPrescription().getId() : 0);
+			viewState.setTherapyId(therapyId);
+			model.addAttribute("prescription", therapy.getPrescription());
+		} else {
+			model.addAttribute("prescription", therapy.getPrescriptions().stream()
+					.filter(p -> p.getId() == viewState.getPrescriptionId()).findFirst().get());
+		}
+		model.addAttribute("viewState", viewState);
+		return "patients/createOrUpdateTherapyForm";
+	}
+
+	@RequestMapping(value = "/therapies/{therapyId}/prescriptions/{prescriptionId}/edit", method = RequestMethod.GET)
+	public String editPatientDetailsFormWithPrescription(@PathVariable("therapyId") int therapyId,
+			@PathVariable("prescriptionId") int prescriptionId, Patient patient) {
+		viewState.setPrescriptionId(prescriptionId);
+		return "redirect:/patients/" + patient.getId() + "/therapies/" + therapyId + "/edit";
+	}
+
+	@RequestMapping(value = "/therapies/{therapyId}/edit", method = RequestMethod.POST, params = { "save" })
+	public String processUpdateForm(@PathVariable("therapyId") int therapyId, @Valid Therapy therapy, BindingResult resultTherapy, 
+			@Valid TherapyPrescription prescription, BindingResult result, Patient patient, ModelMap model) {
+		if (result.hasErrors()) {
+			return "patients/createOrUpdateTherapyForm";
+		} else {
+			Therapy stored = therapyRepository.findById(therapyId);
+			updateTherapy(therapy, prescription, stored);
+			return "redirect:/patients/" + patient.getId() + "/therapies/" + therapyId + "/edit";
+		}
+	}
+
+	private void updateTherapy(Therapy therapy, TherapyPrescription prescription, Therapy stored) {
+		TherapyPrescription storedPrescription;
+
+		if (stored != null) {
+			stored.setName(therapy.getName());
+			this.therapyRepository.save(stored);
+		}
+
+		if (viewState.getPrescriptionId() != 0) {
+			storedPrescription = prescriptionRepository.findById(viewState.getPrescriptionId());
+		} else {
+			storedPrescription = new TherapyPrescription();
+			stored.addPrescription(storedPrescription);
+		}
+
+		if (storedPrescription != null) {
+			storedPrescription.setFirstTherapyDate(prescription.getFirstTherapyDate());
+			storedPrescription.setPrescriptionDate(prescription.getPrescriptionDate());
+			storedPrescription.setCount(prescription.getCount());
+			storedPrescription.setOnMondays(prescription.getOnMondays());
+			storedPrescription.setOnTuesdays(prescription.getOnTuesdays());
+			storedPrescription.setOnWednesdays(prescription.getOnWednesdays());
+			storedPrescription.setOnThursdays(prescription.getOnThursdays());
+			storedPrescription.setOnFridays(prescription.getOnFridays());
+			prescriptionRepository.save(storedPrescription);
+		}
+	}
+
+	@RequestMapping(value = "/therapies/{therapyId}/edit", method = RequestMethod.POST, params = { "addPrescription" })
+	public String processUpdateFormAddPrescription(@PathVariable("therapyId") int therapyId, @Valid Therapy therapy,
+			BindingResult result, Patient patient, ModelMap model) {
+		if (result.hasErrors()) {
+			return "patients/createOrUpdateTherapyForm";
+		} else {
+			Therapy stored = therapyRepository.findById(therapyId);
+
+			if (stored != null) {
+				stored.setName(therapy.getName());
+				TherapyPrescription prescription = new TherapyPrescription();
+				TherapyPrescription lastPrescription = stored.getPrescription();
+
+				if ( lastPrescription == null || !lastPrescription.getPrescriptionDate().equals(LocalDate.now()) ) {
+					prescription.setPrescriptionDate(LocalDate.now());
+				}
+				if (lastPrescription != null) {
+					prescription.setCount(lastPrescription.getCount());
+					prescription.setOnMondays(lastPrescription.getOnMondays());
+					prescription.setOnTuesdays(lastPrescription.getOnTuesdays());
+					prescription.setOnWednesdays(lastPrescription.getOnWednesdays());
+					prescription.setOnThursdays(lastPrescription.getOnThursdays());
+					prescription.setOnFridays(lastPrescription.getOnFridays());
+				}
+				stored.addPrescription(prescription);
+				therapyRepository.save(stored);
+				viewState.setPrescriptionId(stored.getPrescription().getId());
 			}
-        	therapy.setNextPrescription(nextTherapyDate);
-            this.prescriptionRepository.save(therapy);
-            return "redirect:/patients/"+patient.getId();
-        }
-    }
+			return "redirect:/patients/" + patient.getId() + "/therapies/" + therapyId + "/edit";
+		}
+	}
 
-    @RequestMapping(value = "/prescriptions/{therapyId}/edit", method = RequestMethod.GET)
-    public String editPatientDetailsForm(@PathVariable("therapyId")int therapyId, Model model) {
-        model.addAttribute(prescriptionRepository.findById(therapyId));
-        return "patients/createOrUpdateTherapyForm";
-    }
+	@RequestMapping(value = "/therapies/{therapyId}/edit", method = RequestMethod.POST, params = { "addAppointments" })
+	public String processUpdateFormAddAppointments(@PathVariable("therapyId") int therapyId,
+			@Valid @ModelAttribute("therapy") Therapy therapy, BindingResult therapyResult,
+			@Valid @ModelAttribute("prescription") TherapyPrescription prescription, BindingResult prescriptionResult,
+			Patient patient, ModelMap model) {
+		if (therapyResult.hasErrors() || prescriptionResult.hasErrors()) {
+			return "patients/createOrUpdateTherapyForm";
+		} else {
+			Therapy stored = therapyRepository.findById(therapyId);
+			updateTherapy(therapy, prescription, stored);
 
-    @RequestMapping(value = "/prescriptions/{therapyId}/edit", method = RequestMethod.POST, params={"save"})
-	public String processUpdateForm(@PathVariable("therapyId") int therapyId, @Valid TherapyPrescription therapy, BindingResult result, Patient patient, ModelMap model) {
-        if (result.hasErrors()) {
-            return "patients/createOrUpdateTherapyForm";
-        } else {
-        	TherapyPrescription stored = prescriptionRepository.findById(therapyId);
-        	
-        	if ( stored != null ) {
-        		stored.setName(therapy.getName());
-        		stored.setFirstTherapyDate(therapy.getFirstTherapyDate());
-        		stored.setPrescriptionDate(therapy.getPrescriptionDate());
-        		stored.setCount(therapy.getCount());
-        		stored.setOnMondays(therapy.getOnMondays());
-        		stored.setOnTuesdays(therapy.getOnTuesdays());
-        		stored.setOnWednesdays(therapy.getOnWednesdays());
-        		stored.setOnThursdays(therapy.getOnThursdays());
-        		stored.setOnFridays(therapy.getOnFridays());
-        		this.prescriptionRepository.save(stored);
-        	}
-        	return "redirect:/patients/"+patient.getId();
-        }
-    }
+			if (stored != null) {
+				for (TherapyAppointment appointment : stored.getAppointments()) {
 
-    @RequestMapping(value = "/prescriptions/{therapyId}/edit", method = RequestMethod.POST, params={"addAppointments"})
-	public String processUpdateFormAddAppointments(@PathVariable("therapyId") int therapyId, @Valid TherapyPrescription therapy, BindingResult result, Patient patient, ModelMap model) {
-        if (result.hasErrors()) {
-            return "patients/createOrUpdateTherapyForm";
-        } else {
-        	TherapyPrescription stored = prescriptionRepository.findById(therapyId);
-        	
-        	if ( stored != null ) {
-        		stored.setName(therapy.getName());
-        		stored.setFirstTherapyDate(therapy.getFirstTherapyDate());
-        		stored.setPrescriptionDate(therapy.getPrescriptionDate());
-        		stored.setCount(therapy.getCount());
-        		stored.setOnMondays(therapy.getOnMondays());
-        		stored.setOnTuesdays(therapy.getOnTuesdays());
-        		stored.setOnWednesdays(therapy.getOnWednesdays());
-        		stored.setOnThursdays(therapy.getOnThursdays());
-        		stored.setOnFridays(therapy.getOnFridays());
-        		
-        		for (TherapyAppointment appointment : stored.getAppointments()) {
-        			stored.getAppointmentsInternal().remove(appointment);
-        			appointmentRepository.delete(appointment);
-        			
-        			logger.debug("Deleted appointment #"+appointment.getId());
+					stored.getAppointmentsInternal().remove(appointment);
+					appointmentRepository.delete(appointment);
+
+					logger.debug("Deleted appointment #" + appointment.getId());
 				}
-        		
-        		LocalDate therapyDate = therapy.getFirstTherapyDate();
-        		for (int i = 0; i < stored.getCount(); i++) {
-					TherapyAppointment appointment = new TherapyAppointment();
-					
-					appointment.setDate(therapyDate);
-					appointment.setPrescription(stored);
-					appointmentRepository.save(appointment);
-					therapyDate = calcNextDate(therapy, therapyDate);
+
+				TherapyPrescription viewedPrescription = getViewedPrescription();
+				LocalDate therapyDate = viewedPrescription.getFirstTherapyDate();
+				if (therapyDate == null && viewedPrescription.prescriptionDate != null) {
+					therapyDate = calcNextDate(viewedPrescription, viewedPrescription.prescriptionDate);
+					viewedPrescription.setFirstTherapyDate(therapyDate);
 				}
-        		this.prescriptionRepository.save(stored);
-        	}
-        	return "redirect:/patients/"+patient.getId()+"/prescriptions/"+therapyId+"/edit";
-        }
-    }
-
-    @RequestMapping(value = "/prescriptions/{therapyId}/edit", method = RequestMethod.POST, params={"deleteAppointments"})
-	public String processUpdateFormDeleteAppointments(@PathVariable("therapyId") int therapyId, @Valid TherapyPrescription therapy, BindingResult result, Patient patient, ModelMap model) {
-        if (result.hasErrors()) {
-            return "patients/createOrUpdateTherapyForm";
-        } else {
-        	TherapyPrescription stored = prescriptionRepository.findById(therapyId);
-        	
-        	if ( stored != null ) {
-        		for (TherapyAppointment appointment : stored.getAppointments()) {
-        			stored.removeAppointment(appointment);
+				if ( viewedPrescription.getCount() != null ) {
+					for (int i = 0; i < viewedPrescription.getCount(); i++) {
+						TherapyAppointment appointment = new TherapyAppointment();
+	
+						appointment.setDate(therapyDate);
+						appointment.setTherapy(stored);
+						appointment.setPrescription(viewedPrescription);
+						appointmentRepository.save(appointment);
+						therapyDate = calcNextDate(viewedPrescription, therapyDate);
+					}
 				}
-        	}
-        	prescriptionRepository.save(stored);
-        	return "redirect:/patients/"+patient.getId()+"/prescriptions/"+therapyId+"/edit";
-        }
-    }
-    
-    @RequestMapping(value = "/prescriptions/{prescriptionId}/appointments/{appointmentId}/move", method = RequestMethod.GET)    
-    public String processAppointmentMove(@PathVariable("prescriptionId")int prescriptionId, @PathVariable("appointmentId")int appointmentId, //
-    		@RequestParam(name="direction", value="direction", required=true)int direction, //
-    		Patient patient) {
-    	TherapyAppointment appointment = appointmentRepository.findById(appointmentId);
-    	
-    	appointment.setDate(appointment.getDate().plusDays(direction));
-    	appointmentRepository.save(appointment);
-    	return "redirect:/patients/"+patient.getId()+"/prescriptions/"+prescriptionId+"/edit";
-    }
-    
-    @RequestMapping(value = "/prescriptions/{prescriptionId}/appointments/{appointmentId}/moveToEnd", method = RequestMethod.GET)    
-    public String processAppointmentMoveToEnd(@PathVariable("prescriptionId")int prescriptionId, @PathVariable("appointmentId")int appointmentId, //
-    		Patient patient) {
+				this.therapyRepository.save(stored);
+			}
+			return "redirect:/patients/" + patient.getId() + "/therapies/" + therapyId + "/edit";
+		}
+	}
 
-    	TherapyPrescription prescription = prescriptionRepository.findById(prescriptionId);
-    	TherapyAppointment appointment = appointmentRepository.findById(appointmentId);
-    	
-    	Optional<TherapyAppointment> max = prescription.getAppointments().stream().max((a1,a2)->a1.getDate().compareTo(a2.getDate()));
-    	LocalDate maxDate = max.get().getDate();
-    	appointment.setDate(calcNextDate(prescription, maxDate));
-    	prescription.setNextPrescription(calcNextDate(prescription, appointment.getDate()));
+	@RequestMapping(value = "/therapies/{therapyId}/edit", method = RequestMethod.POST, params = { "deletePrescription" })
+	public String processUpdateFormDeleteAppointments(@PathVariable("therapyId") int therapyId, Patient patient, ModelMap model) {
+		Therapy stored = therapyRepository.findById(therapyId);
+		TherapyPrescription storedPrescription = prescriptionRepository.findById(viewState.getPrescriptionId());
 
-    	appointmentRepository.save(appointment);
-    	prescriptionRepository.save(prescription);
-    	return "redirect:/patients/"+patient.getId()+"/prescriptions/"+prescriptionId+"/edit";
-    }
+		if (stored != null && storedPrescription != null) {
+			for (TherapyAppointment appointment : stored.getAppointments()) {
+				if (appointment.getPrescription() == storedPrescription) {
+					stored.removeAppointment(appointment);
+				}
+			}
+		}
+		stored.removePrescription(storedPrescription);
+		therapyRepository.save(stored);
+		if ( stored.getPrescription() != null ) {
+			viewState.setPrescriptionId(stored.getPrescription().getId());
+		}
+		else {
+			viewState.setPrescriptionId(0);
+		}
+		return "redirect:/patients/" + patient.getId() + "/therapies/" + therapyId + "/edit";
+	}
 
-    LocalDate calcNextDate(TherapyPrescription therapy, LocalDate startDate) {
-    	
-    	Periodicity periodicity = therapy.getPeriodicity();
-    	
-    	if ( periodicity == null ) {
-    		periodicity = Periodicity.WEEKLY;
-    	}
-    	
-    	
-    	
-    	switch (periodicity) {
+	@RequestMapping(value = "/therapies/{therapyId}/appointments/{appointmentId}/move", method = RequestMethod.GET)
+	public String processAppointmentMove(@PathVariable("therapyId") int therapyId,
+			@PathVariable("appointmentId") int appointmentId, //
+			@RequestParam(name = "direction", value = "direction", required = true) int direction, //
+			Patient patient) {
+		TherapyAppointment appointment = appointmentRepository.findById(appointmentId);
+
+		appointment.setDate(appointment.getDate().plusDays(direction));
+		appointmentRepository.save(appointment);
+		return "redirect:/patients/" + patient.getId() + "/therapies/" + therapyId + "/edit";
+	}
+
+	@RequestMapping(value = "/therapies/{therapyId}/prescriptions/{prescriptionId}/appointments/{appointmentId}/moveToEnd", method = RequestMethod.GET)
+	public String processAppointmentMoveToEnd(@PathVariable("therapyId") int therapyId,
+			@PathVariable("prescriptionId") int prescriptionId, @PathVariable("appointmentId") int appointmentId, //
+			Patient patient) {
+
+		TherapyPrescription prescription = prescriptionRepository.findById(prescriptionId);
+		TherapyAppointment appointment = appointmentRepository.findById(appointmentId);
+
+		Optional<TherapyAppointment> max = prescription.getAppointments().stream()
+				.max((a1, a2) -> a1.getDate().compareTo(a2.getDate()));
+		LocalDate maxDate = max.get().getDate();
+		appointment.setDate(calcNextDate(prescription, maxDate));
+		prescription.setNextPrescription(calcNextDate(prescription, appointment.getDate()));
+
+		appointmentRepository.save(appointment);
+		prescriptionRepository.save(prescription);
+		return "redirect:/patients/" + patient.getId() + "/therapies/" + therapyId + "/edit";
+	}
+
+	@RequestMapping(value = "/therapies/{therapyId}/prescriptions/{prescriptionId}/appointments/{appointmentId}/edit", method = RequestMethod.GET)
+	public String processAppointmentEdit(@PathVariable("therapyId") int therapyId,
+			@PathVariable("prescriptionId") int prescriptionId, @PathVariable("appointmentId") int appointmentId, //
+			Patient patient, ModelMap model) {
+
+		model.addAttribute("therapy", therapyRepository.findById(therapyId));
+		model.addAttribute("prescription", prescriptionRepository.findById(prescriptionId));
+		model.addAttribute("appointment", appointmentRepository.findById(appointmentId));
+		return "patients/editAppointmentForm";
+	}
+
+	@RequestMapping(value = "/therapies/{therapyId}/prescriptions/{prescriptionId}/appointments/{appointmentId}/edit", method = RequestMethod.POST)
+	public String processAppointmentUpdate(@PathVariable("therapyId") int therapyId,
+			@PathVariable("prescriptionId") int prescriptionId, @PathVariable("appointmentId") int appointmentId, //
+			@Valid @ModelAttribute("appointment") TherapyAppointment appointment, BindingResult appointmentResult, //
+			Patient patient) {
+		if ( appointmentResult.hasErrors() ) {
+			return "patients/editAppointmentForm";
+		}
+		else {
+			TherapyAppointment stored = appointmentRepository.findById(appointmentId);
+			
+			stored.setDate(appointment.getDate());
+			appointmentRepository.save(stored);
+			return "redirect:/patients/" + patient.getId() + "/therapies/" + therapyId + "/edit";
+		}
+	}
+
+	LocalDate calcNextDate(TherapyPrescription therapy, LocalDate startDate) {
+
+		if ( startDate == null ) {
+			return null;
+		}
+		
+		Periodicity periodicity = therapy.getPeriodicity();
+
+		if (periodicity == null) {
+			periodicity = Periodicity.WEEKLY;
+		}
+
+		switch (periodicity) {
 		case DAILY:
 			return startDate.plusDays(1);
 		case WEEKLY:
@@ -225,7 +335,9 @@ public class TherapyPrescriptionController {
 		default:
 			throw new IllegalArgumentException(periodicity.name());
 		}
-    }
-    
-}
+	}
 
+	TherapyPrescription getViewedPrescription() {
+		return prescriptionRepository.findById(viewState.getPrescriptionId());
+	}
+}
