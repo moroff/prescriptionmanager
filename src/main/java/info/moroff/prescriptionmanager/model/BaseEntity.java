@@ -16,11 +16,13 @@
 package info.moroff.prescriptionmanager.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Version;
 
 /**
  * Simple JavaBean domain object with an id property. Used as a base class for objects
@@ -36,6 +38,13 @@ public abstract class BaseEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Version
+    private Date version;
+    
+    public Date getVersion() {
+		return version;
+	}
+    
     public Integer getId() {
         return id;
     }

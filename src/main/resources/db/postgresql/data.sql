@@ -50,3 +50,11 @@ INSERT INTO drugbox (id, dayly_intake, inventory_amount, inventory_date, drug_id
 
 -- BIRGITT
 INSERT INTO drugbox (id, dayly_intake, inventory_amount, inventory_date, drug_id, patient_id)  VALUES (2, 1.0, 15, '2018-02-01', 2, 3) ON CONFLICT DO NOTHING;
+
+-- PRESET VERSION TIMESTAMP
+UPDATE drugs SET version=CURRENT_TIMESTAMP() WHERE version is null;
+UPDATE drugbox SET version=CURRENT_TIMESTAMP() WHERE version is null;
+UPDATE patients SET version=CURRENT_TIMESTAMP() WHERE version is null;
+UPDATE therapy SET version=CURRENT_TIMESTAMP() WHERE version is null;
+UPDATE therapy_appointment SET version=CURRENT_TIMESTAMP() WHERE version is null;
+UPDATE therapy_prescription SET version=CURRENT_TIMESTAMP() WHERE version is null;
