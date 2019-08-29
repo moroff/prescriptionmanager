@@ -12,6 +12,7 @@ import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
 
+import info.moroff.prescriptionmanager.settings.UserSettings;
 import info.moroff.prescriptionmanager.therapy.TherapyViewState;
 import info.moroff.prescriptionmanager.ui.UITools;
 
@@ -43,5 +44,11 @@ public class PrescriptionManagerApplication {
 	@Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS) 
 	public TherapyViewState therapyViewState() { 
 		return new TherapyViewState();
+	}
+	
+	@Bean
+	@Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS) 
+	public UserSettings userSettings() {
+		return new UserSettings();
 	}
 }

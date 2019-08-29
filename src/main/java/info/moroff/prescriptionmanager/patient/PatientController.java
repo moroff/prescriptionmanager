@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import info.moroff.prescriptionmanager.settings.UserSettings;
 import info.moroff.prescriptionmanager.ui.UITools;
 
 @Controller
@@ -29,6 +30,9 @@ class PatientController {
 
     @Autowired
     private UITools uiTools;
+    
+    @Autowired
+    private UserSettings userSettings;
     
     @RequestMapping(value = { "/patients.html" })
     public String showPatientList(Map<String, Object> model) {
@@ -53,6 +57,7 @@ class PatientController {
         Patient patient = this.patients.findById(patientId);
         model.put("patient", patient);
         model.put("uitools", uiTools);
+        model.put("userSettings", userSettings);
         return VIEWS_PATIENT_DETAILS_FORM;
     }
 
@@ -60,6 +65,7 @@ class PatientController {
     public String initUpdatePatientForm(@PathVariable("patientId") int patientId, Model model) {
         Patient patient = this.patients.findById(patientId);
         model.addAttribute(patient);
+        model.addAttribute("userSettings", userSettings);
         return VIEWS_PATIENT_CREATE_OR_UPDATE_FORM;
     }
 

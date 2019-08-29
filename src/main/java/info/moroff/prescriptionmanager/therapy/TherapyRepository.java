@@ -26,4 +26,11 @@ public interface TherapyRepository extends Repository<Therapy, Integer> {
      */
     Therapy save(Therapy therapy);
 
+    /**
+     * Deletes therapy, prescription and apointments.
+     * @param therapy
+     */
+    @Transactional()
+	void delete(Therapy therapy);
+ 
 }

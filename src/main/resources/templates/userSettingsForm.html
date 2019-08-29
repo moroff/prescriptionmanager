@@ -1,0 +1,27 @@
+<html xmlns:th="http://www.thymeleaf.org"
+  th:replace="~{fragments/layout :: layout (~{::body},'settings')}">
+
+
+<body>
+
+  <h2 th:text="#{userSettings}">Settings</h2>
+  <form th:object="${userSettings}" class="form-horizontal" id="add-patient-form" method="post">
+    <div class="col-sm-10 checkbox">
+      <label><input th:field="*{createNewTherapy}" th:text="#{createNewTherapy}" type="checkbox"></input></label>
+    </div>
+    <div class="col-sm-10 checkbox">
+      <label><input th:field="*{deleteTherapy}" th:text="#{deleteTherapy}" type="checkbox"></input></label>
+    </div>
+    <div class="col-sm-10 checkbox">
+      <label><input th:field="*{showInactiveDrugs}" th:text="#{showInactiveDrugs}" type="checkbox"></input></label>
+    </div>
+
+    <div class="form-group">
+      <div class="col-sm-10">
+        <button class="btn btn-default" type="submit" th:text="#{save}">Save</button>
+      </div>
+    </div>
+  </form>
+</body>
+
+</html>

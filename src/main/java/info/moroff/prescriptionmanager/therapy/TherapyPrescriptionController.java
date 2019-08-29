@@ -89,6 +89,21 @@ public class TherapyPrescriptionController {
 		}
 	}
 
+	@RequestMapping(value = "/therapies/{therapyId}/delete", method = RequestMethod.GET)
+	public String initDelete(@PathVariable("therapyId") int therapyId, Patient patient, Model model) {
+		Therapy therapy = therapyRepository.findById(therapyId);
+		model.addAttribute("therapy", therapy);
+		return "patients/therapyDelete";
+	}
+	
+	@RequestMapping(value = "/therapies/{therapyId}/delete", method = RequestMethod.POST)
+	public String processDelete(@PathVariable("therapyId") int therapyId, Patient patient) {
+		Therapy stored = therapyRepository.findById(therapyId);
+		patient.deleteTherapy(stored);
+		patientRepository.save(patient);
+		return "redirect:/patients/" + patient.getId();
+	}
+	
 	@RequestMapping(value = "/therapies/{therapyId}/edit", method = RequestMethod.GET)
 	public String editPatientDetailsForm(@PathVariable("therapyId") int therapyId, Model model) {
 		Therapy therapy = therapyRepository.findById(therapyId);

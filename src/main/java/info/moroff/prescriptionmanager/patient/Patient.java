@@ -41,7 +41,7 @@ public class Patient extends PersonWithAddress {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "patient", fetch=FetchType.EAGER)
     private Set<DrugBoxItem> drugBoxItems;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "patient", fetch=FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "patient", fetch=FetchType.EAGER, orphanRemoval=true)
     private Set<Therapy> therapies;
 
     public String getTelephone() {
@@ -73,6 +73,10 @@ public class Patient extends PersonWithAddress {
         List<Therapy> sortedItems = new ArrayList<>(getTherapyInternal());
         PropertyComparator.sort(sortedItems, new MutableSortDefinition("id", true, true));
         return Collections.unmodifiableList(sortedItems);
+    }
+
+    public void deleteTherapy(Therapy therapy) {
+    	getTherapyInternal().remove(therapy);
     }
     
     protected Set<Therapy> getTherapyInternal() {
