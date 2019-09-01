@@ -33,6 +33,11 @@ class PatientController {
     
     @Autowired
     private UserSettings userSettings;
+
+    @RequestMapping(value = { "/" })
+    public String showHome(Map<String, Object> model) {
+    	return showPatientList(model);
+    }
     
     @RequestMapping(value = { "/patients.html" })
     public String showPatientList(Map<String, Object> model) {

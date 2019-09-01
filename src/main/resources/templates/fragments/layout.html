@@ -36,35 +36,30 @@
           </div>
           <div class="navbar-collapse collapse" id="main-navbar">
               <ul class="nav navbar-nav navbar-right">
-  
-                  <li th:fragment="menuItem (path,active,title,glyph,text)" class="active" th:class="${active==menu ? 'active' : ''}">
-                      <a th:href="@{__${path}__}" th:title="${title}">
-                        <span th:class="'glyphicon  glyphicon-'+${glyph}" class="glyphicon glyphicon-home" aria-hidden="true"></span>
-                        <span th:text="${text}">Template</span>
-                      </a>
-                  </li>
-  
-                  <li th:replace="::menuItem ('/','home','home page','home','Home')">
+
+<!-- 
+                  <li th:replace="~{fragments/menuItem ::menuItem ('/','home','home page','home','Home')}">
                       <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
                       <span>Home</span>
                   </li>
+ -->  
   
-                  <li th:replace="::menuItem ('/patients.html','patients','patients','user', '__#{patients}__')">
+                  <li th:replace="~{fragments/menuItem ::menuItem ('/patients.html','patients','patients','user', '__#{patients}__')}">
                       <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
                       <span>Patients</span>
                   </li>
   
-                  <li th:replace="::menuItem ('/drugs/find','drugs','find drugs','search','__#{drugsFind}__')">
+                  <li th:replace="~{fragments/menuItem ::menuItem ('/drugs/find','drugs','find drugs','search','__#{drugsFind}__')}">
                       <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                       <span>Find drugs</span>
                   </li>
       
-                  <li th:replace="::menuItem ('/settings','settings','settings','cog','Settings')">
+                  <li th:replace="~{fragments/menuItem ::menuItem ('/settings','settings','settings','cog','Settings')}">
                       <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
                       <span th:text="#{settings}">Settings</span>
                   </li>
       <!--       
-                  <li th:replace="::menuItem ('/logout','logout','logout','log-out','Logout')">
+                  <li th:replace="~{fragments/menuItem ::menuItem ('/logout','logout','logout','log-out','Logout')}">
                       <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
                       <span th:text="#{logout}">Logout 2</span>
                   </li>
