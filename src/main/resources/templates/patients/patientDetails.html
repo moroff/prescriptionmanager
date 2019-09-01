@@ -60,23 +60,14 @@
   </tr>
 
     <tr th:each="therapy : ${patient.therapies}">
-    <!-- 
-      <td><span th:class="${uitools.getLabelForRemainingDays(therapy.nextPrescription)}">&nbsp;</span></td>
-     -->
+      <td><span th:class="${uitools.getLabelForRemainingDays(therapy.lastAppointmentDate)}">&nbsp;</span></td>
       <td valign="top">
         <dl class="dl-horizontal">
           <dt th:text="#{name}">Name</dt>
           <dd th:text="${therapy.name}" /></dd>
-<!-- 
-          <dt th:text="#{prescriptionDate}">Prescription Date</dt>
-          <dd th:text="${#temporals.format(therapy.lastPrescriptionDate, 'dd.MM.yyyy')}" /></dd>
-          <dt th:text="#{nextPrescription}">Next Prescription Date</dt>
-          <dd th:text="${#temporals.format(therapy.nextPrescription, 'dd.MM.yyyy')}" /></dd>
-          <dt th:text="#{exhaustingDate}">Exhaust Date</dt>
-          <dd th:text="${#temporals.format(prescription.exhaustingDate, 'dd.MM.yyyy')}" /></dd>
-          <dt th:text="#{amount}">Amount</dt>
-          <dd th:text="${prescription.amount}" /></dd>
- -->          
+          <dt th:text="#{nextAppointmentDate}">Next appointment</dt>
+          <dd th:if="${therapy.lastAppointmentDate}" th:text="${#temporals.format(therapy.lastAppointmentDate, 'dd.MM.yyyy')}" /></dd>
+          <dd th:unless="${therapy.lastAppointmentDate}" th:text="#{dateOpen}" /></dd>
         </dl>
       </td>
       <td valign="top">

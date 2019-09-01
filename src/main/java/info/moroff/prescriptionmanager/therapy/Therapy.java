@@ -1,9 +1,11 @@
 package info.moroff.prescriptionmanager.therapy;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -19,6 +21,7 @@ import org.springframework.beans.support.PropertyComparator;
 
 import info.moroff.prescriptionmanager.model.BaseEntity;
 import info.moroff.prescriptionmanager.patient.Patient;
+import info.moroff.prescriptionmanager.util.CompareUtils;
 
 @SuppressWarnings("serial")
 @Entity
@@ -111,5 +114,22 @@ public class Therapy extends BaseEntity {
 		getAppointmentsInternal().remove(appointment);
 	}
 
+    public LocalDate getLastAppointmentDate() {
+		if ( getPrescriptionsInternal().size() > 0) {
+			List<TherapyPrescription> prescriptions = getPrescriptions();
+    		TherapyPrescription lastPrescription = prescriptions.get(prescriptions.size()-1);
+    		List<TherapyAppointment> appointments = lastPrescription.getAppointments();
+    		
+    		if ( lastPrescription.getPrescriptionDate() == null && appointments.size() > 0 ) {
+    			return appointments.get(0).getDate();
+    		}
+    		else if ( lastPrescription.getPrescriptionDate() != null && appointments.size() > 0) {
+    			TherapyAppointment lastAppointment = appointments.get(appointments.size()-1);
+    				
+   				return lastAppointment.getDate();
+    		}
 
+		} 
+		return null;
+    }
 }

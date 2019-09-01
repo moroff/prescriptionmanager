@@ -34,7 +34,7 @@ public class UITools {
 
 			return getLabelForRemainingDays(Integer.valueOf((int) remainingDays));
 		} else {
-			return "";
+			return "label label-default";
 		}
 	}
 

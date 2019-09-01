@@ -22,6 +22,7 @@ import org.springframework.core.style.ToStringCreator;
 
 import info.moroff.prescriptionmanager.model.PersonWithAddress;
 import info.moroff.prescriptionmanager.therapy.Therapy;
+import info.moroff.prescriptionmanager.util.CompareUtils;
 
 /**
  * Simple JavaBean domain object representing a patient.
@@ -94,7 +95,7 @@ public class Patient extends PersonWithAddress {
     }
 
     public LocalDate getExhaustingDate() {
-    	Optional<LocalDate> minDate = getDrugBoxItemsInternal().stream().map(DrugBoxItem::getExhaustingDate).min(Patient::compare);
+    	Optional<LocalDate> minDate = getDrugBoxItemsInternal().stream().map(DrugBoxItem::getExhaustingDate).min(CompareUtils::compare);
     	
     	if ( minDate.isPresent() ) 
     		return minDate.get();
@@ -103,7 +104,7 @@ public class Patient extends PersonWithAddress {
     }
     
     public Integer getRemainingDays() {
-    	Optional<Integer> minDays = getDrugBoxItemsInternal().stream().map(DrugBoxItem::getRemainingDays).min(Patient::compare);
+    	Optional<Integer> minDays = getDrugBoxItemsInternal().stream().map(DrugBoxItem::getRemainingDays).min(CompareUtils::compare);
     	
     	if ( minDays.isPresent() ) 
     		return minDays.get();
@@ -112,28 +113,15 @@ public class Patient extends PersonWithAddress {
     	
     }
     
-    static int compare(LocalDate op1, LocalDate op2) {
-    	if ( op1 == null && op2 == null ) 
-    		return 0;
-    	else if ( op1 == null ) 
-    		return 1;
-    	else if ( op2 == null )
-    		return -1;
-    	else
-    		return op1.compareTo(op2);
-    }
+    public LocalDate getNextAppointmentDate() {
+    	Optional<LocalDate> minDate = getTherapyInternal().stream().map(t -> t.getLastAppointmentDate()).min(CompareUtils::compare);
 
-    static int compare(Integer op1, Integer op2) {
-    	if ( op1 == null && op2 == null ) 
-    		return 0;
-    	else if ( op1 == null ) 
-    		return 1;
-    	else if ( op2 == null )
-    		return -1;
+    	if ( minDate.isPresent() ) 
+    		return minDate.get();
     	else
-    		return op1.compareTo(op2);
+    		return null;
     }
-
+    
     /**
      * Return the DrugBoxItem with the given drug name, or null if none found for this patient.
      *

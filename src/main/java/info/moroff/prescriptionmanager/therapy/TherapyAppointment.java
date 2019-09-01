@@ -9,6 +9,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import info.moroff.prescriptionmanager.model.BaseEntity;
 
 @SuppressWarnings("serial")
@@ -39,6 +41,7 @@ public class TherapyAppointment extends BaseEntity {
 	}
 
 	@Column(name="date")
+	@DateTimeFormat(pattern = "dd.MM.yyyy")
 	LocalDate date;
 	public LocalDate getDate() {
 		return date;

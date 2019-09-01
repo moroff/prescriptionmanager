@@ -13,13 +13,19 @@
         <th>&nbsp;</th>
         <th th:text="#{name}">Name</th>
         <th th:text="#{exhaustingDate}">First exhausting date</th>
+        <th th:text="#{nextAppointmentDate}">Next appointment date</th>
       </tr>
     </thead>
     <tbody>
       <tr th:each="patient : ${patients.patientList}">
-        <td><span th:class="${uitools.getLabelForRemainingDays(patient.remainingDays)}">&nbsp;<!--  th:text="${patient.remainingDays}">N/A --></span></td>
+        <td><span th:class="${uitools.getLabelForRemainingDays(patient.remainingDays)}">&nbsp;</span>
+            &nbsp;
+            <span th:unless="${patient.therapies.empty}" th:class="${uitools.getLabelForRemainingDays(patient.nextAppointmentDate)}">&nbsp;</span>
+        </td>
         <td><a th:href="@{/patients/__${patient.id}__}"><div th:text="|${patient.firstName} ${patient.lastName}|">Edit</div></a></td>
         <td th:text="${#temporals.format(patient.exhaustingDate, 'dd.MM.yyyy')}"></td>
+        <td th:if="${patient.nextAppointmentDate}" th:text="${#temporals.format(patient.nextAppointmentDate, 'dd.MM.yyyy')}"></td>
+        <td th:unless="${patient.nextAppointmentDate}" th:text="#{noTherapy}">No Therapies</td>
       </tr>
     </tbody>
   </table>
