@@ -1,5 +1,7 @@
 package info.moroff.prescriptionmanager.model;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public enum Periodicity {
 
 	DAILY(0), //
@@ -14,6 +16,7 @@ public enum Periodicity {
 		value = newValue;
 	}
 
+	@JsonValue
 	public int getValue() {
 		return value;
 	}

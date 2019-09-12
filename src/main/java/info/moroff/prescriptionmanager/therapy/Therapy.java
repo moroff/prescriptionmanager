@@ -19,6 +19,8 @@ import javax.persistence.Table;
 import org.springframework.beans.support.MutableSortDefinition;
 import org.springframework.beans.support.PropertyComparator;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import info.moroff.prescriptionmanager.model.BaseEntity;
 import info.moroff.prescriptionmanager.patient.Patient;
 import info.moroff.prescriptionmanager.util.CompareUtils;
@@ -30,6 +32,7 @@ public class Therapy extends BaseEntity {
 
 	@ManyToOne(fetch=FetchType.LAZY, optional=false)
 	@JoinColumn(name="patient_id", updatable=false, nullable=false)
+	@JsonIgnore
 	private Patient patient;
 	
 	public Patient getPatient() {
@@ -88,6 +91,7 @@ public class Therapy extends BaseEntity {
 			
 	}
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "therapy", fetch = FetchType.EAGER, orphanRemoval = true)
+	@JsonIgnore
 	private Set<TherapyAppointment> appointments;
 
 	protected Set<TherapyAppointment> getAppointmentsInternal() {

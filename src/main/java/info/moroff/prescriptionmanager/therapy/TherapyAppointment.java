@@ -11,6 +11,8 @@ import javax.persistence.Table;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import info.moroff.prescriptionmanager.model.BaseEntity;
 
 @SuppressWarnings("serial")
@@ -20,6 +22,7 @@ public class TherapyAppointment extends BaseEntity {
 
 	@ManyToOne(fetch=FetchType.LAZY, optional=true)
 	@JoinColumn(name="prescription_id", updatable=true, nullable=true)
+	@JsonIgnore
 	private TherapyPrescription prescription;
 	
 	public TherapyPrescription getPrescription() {
@@ -31,6 +34,7 @@ public class TherapyAppointment extends BaseEntity {
 	
 	@ManyToOne(fetch=FetchType.LAZY, optional=false)
 	@JoinColumn(name="therapy_id", updatable=false, nullable=false)
+	@JsonIgnore
 	private Therapy therapy;
 	
 	public Therapy getTherapy() {

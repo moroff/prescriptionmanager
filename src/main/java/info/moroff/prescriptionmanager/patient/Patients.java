@@ -15,8 +15,11 @@
  */
 package info.moroff.prescriptionmanager.patient;
 
+import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -28,14 +31,29 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class Patients {
 
-    private List<Patient> patients;
+    private List<PatientInfo> patients;
 
     @XmlElement
-    public List<Patient> getPatientList() {
+    public List<PatientInfo> getPatientList() {
         if (patients == null) {
             patients = new ArrayList<>();
         }
         return patients;
     }
+
+	public void addAll(Collection<Patient> patients) {
+		getPatientList().addAll(
+			patients.stream().map(p -> {
+				PatientInfo pi = new PatientInfo();
+				pi.firstName = p.getFirstName();
+				pi.lastName = p.getLastName();
+				pi.remainingDays = p.getRemainingDays();
+				pi.exhaustingDate = p.getExhaustingDate() != null ? Date.valueOf(p.getExhaustingDate()) : null;
+				pi.nextAppointmentDate = p.getNextAppointmentDate() != null ? Date.valueOf(p.getNextAppointmentDate()) : null;
+				return pi;
+			}).collect(Collectors.toList())
+		);
+		
+	}
 
 }

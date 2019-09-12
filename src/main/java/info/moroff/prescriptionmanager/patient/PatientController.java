@@ -1,5 +1,6 @@
 package info.moroff.prescriptionmanager.patient;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -48,13 +50,14 @@ class PatientController {
         return "patients/patientList";
     }
 
-    @RequestMapping(value = { "/patients.json", "/patients.xml" })
-    public @ResponseBody Patients showResourcesPatientList() {
+    @RequestMapping(value = { "/api/patients.json", "/api/patients.xml" })
+    @CrossOrigin(origins = "http://localhost:4200")
+    public @ResponseBody List<PatientInfo> showResourcesPatientList() {
         // Here we are returning an object of type 'Patients' rather than a collection of Patient
         // objects so it is simpler for JSon/Object mapping
         Patients patients = new Patients();
-        patients.getPatientList().addAll(this.patients.findAll());
-        return patients;
+        patients.addAll(this.patients.findAll());
+        return patients.getPatientList();
     }
     
     @RequestMapping(value = "/patients/{patientId}", method = RequestMethod.GET)
@@ -66,6 +69,12 @@ class PatientController {
         return VIEWS_PATIENT_DETAILS_FORM;
     }
 
+    @RequestMapping(value = "/api/patients/{patientId}", method = RequestMethod.GET)
+    @CrossOrigin(origins = "http://localhost:4200")
+    public @ResponseBody Patient apiPatientDetails(@PathVariable("patientId") int patientId) {
+    	return this.patients.findById(patientId);
+    }
+    
     @RequestMapping(value = "/patients/{patientId}/edit", method = RequestMethod.GET)
     public String initUpdatePatientForm(@PathVariable("patientId") int patientId, Model model) {
         Patient patient = this.patients.findById(patientId);

@@ -16,15 +16,19 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.springframework.beans.support.MutableSortDefinition;
 import org.springframework.beans.support.PropertyComparator;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import info.moroff.prescriptionmanager.model.BaseEntity;
 import info.moroff.prescriptionmanager.model.Periodicity;
 import info.moroff.prescriptionmanager.model.Prescription;
 import info.moroff.prescriptionmanager.patient.DrugBoxItem;
+import info.moroff.prescriptionmanager.util.LocalDateAdapter;
 
 /**
  * A therapy prescription
@@ -39,6 +43,7 @@ public class TherapyPrescription extends BaseEntity {
 
 	@ManyToOne(fetch=FetchType.LAZY, optional=false)
 	@JoinColumn(name="therapy_id", updatable=false, nullable=false)
+	@JsonIgnore
 	private Therapy therapy;
 
 	public Therapy getTherapy() {
@@ -77,6 +82,7 @@ public class TherapyPrescription extends BaseEntity {
 	 */
 	@Column(columnDefinition = "DATE")
 	@DateTimeFormat(pattern = "dd.MM.yyyy")
+	@XmlJavaTypeAdapter(LocalDateAdapter.class)
 	LocalDate prescriptionDate;
 
 	public LocalDate getPrescriptionDate() {
@@ -218,6 +224,7 @@ public class TherapyPrescription extends BaseEntity {
 		getAppointmentsInternal().remove(appointment);
 	}
 
+	@JsonIgnore
 	public List<String> getPeriodicities() {
 		List<String> periodicities = new ArrayList<>();
 		

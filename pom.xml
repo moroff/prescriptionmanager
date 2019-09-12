@@ -11,7 +11,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>1.5.10.RELEASE</version>
+    <version>2.1.8.RELEASE</version>
     <relativePath /> <!-- lookup parent from repository -->
   </parent>
   <name>prescriptionmanager</name>
@@ -25,12 +25,15 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
     <!-- Web dependencies -->
+    <webjars-locator.version>0.32-1</webjars-locator.version>
     <webjars-bootstrap.version>3.3.6</webjars-bootstrap.version>
     <webjars-jquery-ui.version>1.11.4</webjars-jquery-ui.version>
     <webjars-jquery.version>2.2.4</webjars-jquery.version>
     <wro4j.version>1.8.0</wro4j.version>
 
+    <!-- 
     <thymeleaf.version>3.0.3.RELEASE</thymeleaf.version>
+     -->
 
     <cobertura.version>2.7</cobertura.version>
 
@@ -62,13 +65,13 @@
     <dependency>
       <groupId>nz.net.ultraq.thymeleaf</groupId>
       <artifactId>thymeleaf-layout-dialect</artifactId>
-      <version>2.3.0</version>
     </dependency>
+    <!-- 
     <dependency>
       <groupId>org.thymeleaf.extras</groupId>
       <artifactId>thymeleaf-extras-java8time</artifactId>
-      <version>3.0.0.RELEASE</version>
     </dependency>
+     -->
 
     <!-- Test dependencies -->    
     <dependency>
@@ -109,6 +112,7 @@
     <dependency>
       <groupId>org.webjars</groupId>
       <artifactId>webjars-locator</artifactId>
+      <version>${webjars-locator.version}</version>
     </dependency>
     <dependency>
       <groupId>org.webjars</groupId>
@@ -131,6 +135,12 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-devtools</artifactId>
       <scope>runtime</scope>
+    </dependency>
+    
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.17</version>
     </dependency>
   </dependencies>
 

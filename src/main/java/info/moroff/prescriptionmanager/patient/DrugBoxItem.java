@@ -15,6 +15,8 @@ import javax.validation.constraints.DecimalMin;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import info.moroff.prescriptionmanager.drug.Drug;
 import info.moroff.prescriptionmanager.model.BaseEntity;
 
@@ -22,7 +24,7 @@ import info.moroff.prescriptionmanager.model.BaseEntity;
 @Entity
 @Table(name = "drugbox")
 public class DrugBoxItem extends BaseEntity {
-
+	@JsonIgnore
 	@ManyToOne(fetch=FetchType.LAZY, optional=false)
 	@JoinColumn(name="patient_id", updatable=false, nullable=false)
 	private Patient patient;
