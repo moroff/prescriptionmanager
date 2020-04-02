@@ -45,6 +45,7 @@ public class Patients {
 		getPatientList().addAll(
 			patients.stream().map(p -> {
 				PatientInfo pi = new PatientInfo();
+				pi.id = p.getId();
 				pi.firstName = p.getFirstName();
 				pi.lastName = p.getLastName();
 				pi.remainingDays = p.getRemainingDays();
