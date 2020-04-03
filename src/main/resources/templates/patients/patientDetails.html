@@ -21,6 +21,8 @@
     class="glyphicon glyphicon-plus-sign" aria-hidden="true" /></a>
  -->
   <div th:if="${userSettings.createNewTherapy}">
+    <a th:href="@{{id}/drugs/new(id=${patient.id})}" class="btn btn-default"><span th:text="#{drug}">Drug</span>&nbsp;<span
+      class="glyphicon glyphicon-plus-sign" aria-hidden="true" /></a>
     <a th:href="@{{id}/therapy/new(id=${patient.id})}" class="btn btn-default"><span th:text="#{therapy}">Therapy</span>&nbsp;<span
       class="glyphicon glyphicon-plus-sign" aria-hidden="true" /></a>
   </div>

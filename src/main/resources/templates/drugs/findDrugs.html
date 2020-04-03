@@ -5,17 +5,18 @@
 
   <h2 th:text="#{drugsFind}">Find Drugs</h2>
 
-  <form th:object="${drug}" th:action="@{/drugs}" method="get"
+  <form th:object="${drug}" th:action="@{/drugs(patientId=${patientId})}" method="get"
     class="form-horizontal" id="search-drug-form">
     <div class="form-group">
       <div class="control-group" id="lastName">
         <label class="col-sm-2 control-label">Name </label>
         <div class="col-sm-10">
-          <input class="form-control" th:field="*{name}" size="30"
-            maxlength="80" /> <span class="help-inline">
-            <div th:if="${#fields.hasAnyErrors()}">
-              <p th:each="err : ${#fields.allErrors()}" th:text="${err}">Error</p>
-            </div></span>
+          <input class="form-control" th:field="*{name}" size="30" maxlength="80" /> 
+            <span class="help-inline">
+              <div th:if="${#fields.hasAnyErrors()}">
+                <p th:each="err : ${#fields.allErrors()}" th:text="${err}">Error</p>
+              </div>
+            </span>
         </div>
       </div>
     </div>
@@ -28,7 +29,6 @@
   </form>
 
   <br />
-  <a class="btn btn-default" th:href="@{/drugs/new}" th:text="#{drugsAdd}">Add Drug</a>
-
+  <a class="btn btn-default" th:href="@{/drugs/new(patientId=${patientId})}" th:text="#{drugsAdd}">Add Drug</a>
 </body>
 </html>

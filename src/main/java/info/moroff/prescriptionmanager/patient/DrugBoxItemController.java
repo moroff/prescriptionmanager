@@ -15,6 +15,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import info.moroff.prescriptionmanager.drug.Drug;
+import info.moroff.prescriptionmanager.drug.DrugRepository;
 
 @Controller
 @RequestMapping("/patients/{patientId}")
@@ -23,12 +27,14 @@ class DrugBoxItemController {
 	private static final String VIEWS_DRUGS_CREATE_OR_UPDATE_FORM = "patients/createOrUpdateDrugsForm";
 	private static final String VIEWS_DRUGS_DETAILS_FORM = "patients/drugsDetails";
 	private final PatientRepository patients;
+	private final DrugRepository drugs;
 	private DrugBoxItemRepository drugBoxItems;
 	private final Logger logger = Logger.getLogger(getClass());
 	
 	@Autowired
-	public DrugBoxItemController(PatientRepository patients, DrugBoxItemRepository drugBoxItems) {
+	public DrugBoxItemController(PatientRepository patients, DrugRepository drugs, DrugBoxItemRepository drugBoxItems) {
 		this.patients = patients;
+		this.drugs = drugs;
 		this.drugBoxItems = drugBoxItems;
 	}
 
@@ -45,6 +51,28 @@ class DrugBoxItemController {
 	// @RequestMapping(value = "/drugs/{drugId}/api", method =
 	// RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 
+	@RequestMapping(value = "/drugs/new/{drugId}", method = RequestMethod.GET)
+	public String initNewDrugBoxItem(Patient patient, @PathVariable(name="drugId") Integer drugId, Model model) {
+		DrugBoxItem drugBoxItem = new DrugBoxItem();
+		Drug drug = drugs.findById(drugId);
+		drugBoxItem.setDrug(drug);
+		drugBoxItem.setInventoryDate(LocalDate.now());
+		drugBoxItem.setInventoryAmount(drug.getPackageSize().doubleValue());
+		drugBoxItem.setDaylyIntake(1.0);
+		model.addAttribute("drugBoxItem", drugBoxItem );
+		return VIEWS_DRUGS_CREATE_OR_UPDATE_FORM;
+	}
+
+	@RequestMapping(value = "/drugs/new/{drugId}", method = RequestMethod.POST)
+	public String processNewForm(@PathVariable("drugId") int drugId, DrugBoxItem drugBoxItem, BindingResult result,
+			Patient patient, ModelMap model) {
+		Drug drug = drugs.findById(drugId);
+		drugBoxItem.setPatient(patient);
+		drugBoxItem.setDrug(drug);
+		drugBoxItems.save(drugBoxItem);
+		return "redirect:/patients/"+patient.getId();
+	}
+		
 	@RequestMapping(value = "/drugs/{drugId}/view", method = RequestMethod.GET)
 	public String viewPatientDetailsForm(Patient patient, @PathVariable("drugId") int drugId, Model model) {
 		Optional<DrugBoxItem> drugBoxItem = patient.getDrugBoxItemsInternal().stream().filter(d -> d.getId() == drugId)
@@ -78,6 +106,11 @@ class DrugBoxItemController {
 	// return new ResponseEntity<DrugBoxItem>(drugBoxItem, HttpStatus.OK);
 	// }
 
+	@RequestMapping(value = "/drugs/new", method = RequestMethod.GET)
+	public String newDrugForPatientSearchForm(Patient patient, Model model) {
+		return "redirect:/drugs/new?patientId="+patient.getId();
+	}
+	
 	@RequestMapping(value = "/drugs/{drugId}/edit", method = RequestMethod.POST)
 	public String processUpdateForm(@PathVariable("drugId") int drugId, DrugBoxItem drugBoxItem, BindingResult result,
 			Patient patient, ModelMap model) {
