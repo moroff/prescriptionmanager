@@ -20,10 +20,14 @@ INSERT INTO drugs (id, name, package_size) VALUES (17, 'PREDNISOLON ACIS 10MG', 
 INSERT INTO drugs (id, name, package_size) VALUES (18, 'PANTOPRAZOL ARISTO 20MG TABL', 100) ON CONFLICT DO NOTHING;
 INSERT INTO drugs (id, name, package_size) VALUES (19, 'METOPROLOL_RATIOPHARM SUCCINAT 47,5MG TABL', 100) ON CONFLICT DO NOTHING;
 
+alter sequence drugs_id_seq restart with 20;
+
 INSERT INTO patients (id, first_name, last_name) VALUES (1, 'Inge', 'S.') ON CONFLICT DO NOTHING; 
 INSERT INTO patients (id, first_name, last_name) VALUES (2, 'Rolf', 'S.') ON CONFLICT DO NOTHING; 
 INSERT INTO patients (id, first_name, last_name) VALUES (3, 'Birgitt', 'S.') ON CONFLICT DO NOTHING; 
 INSERT INTO patients (id, first_name, last_name) VALUES (4, 'Dieter', 'M.') ON CONFLICT DO NOTHING; 
+
+alter sequence patients_id_seq restart with 5;
 
 -- INGE
 INSERT INTO drugbox (id, dayly_intake, inventory_amount, inventory_date, drug_id, patient_id)  VALUES (4, 1.0, 50, '2018-02-01', 4, 1) ON CONFLICT DO NOTHING;
@@ -50,6 +54,8 @@ INSERT INTO drugbox (id, dayly_intake, inventory_amount, inventory_date, drug_id
 
 -- BIRGITT
 INSERT INTO drugbox (id, dayly_intake, inventory_amount, inventory_date, drug_id, patient_id)  VALUES (2, 1.0, 15, '2018-02-01', 2, 3) ON CONFLICT DO NOTHING;
+
+alter sequence drugbox_id_seq restart with 20;
 
 -- PRESET VERSION TIMESTAMP
 UPDATE drugs SET version=CURRENT_TIMESTAMP WHERE version is null;
