@@ -9,9 +9,10 @@
     <table id="drugs" class="table table-striped">
         <thead>
         <tr>
-            <th style="width: 150px;" th:text="#{name}">Name</th>
-            <th style="width: 150px;" th:text="#{packageSize}">Package Size</th>
-            <th style="width: 150px;" th:text="#{pzn}">PZN</th>
+            <th style="width: 40%;" th:text="#{name}">Name</th>
+            <th style="width: 25%;" th:text="#{packageSize}">Package Size</th>
+            <th style="width: 25%;" th:text="#{pzn}">PZN</th>
+            <th style="width: 10%;" th:text="#{id}">ID</th>
         </tr>
         </thead>
         <tbody>
@@ -21,6 +22,7 @@
               </td>
               <td th:text="${drug.packageSize}"/></td>
               <td th:text="${drug.pzn}"/></td>
+              <td th:text="${drug.id}"/></td>
           </tr>
         </tbody>
     </table>

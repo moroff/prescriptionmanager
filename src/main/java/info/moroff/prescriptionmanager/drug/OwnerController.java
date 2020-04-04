@@ -12,8 +12,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -36,25 +38,36 @@ class DrugController {
     }
 
     @RequestMapping(value = "/drugs/new", method = RequestMethod.GET)
-    public String initCreationForm(Map<String, Object> model) {
+    public String initCreationForm(@RequestParam(name="patientId", required=false) Integer patientId, Map<String, Object> model) {
         Drug drug = new Drug();
+        if( patientId != null ) {
+        	model.put("patientId", patientId);
+        }
         model.put("drug", drug);
         return VIEWS_DRUG_CREATE_OR_UPDATE_FORM;
     }
 
     @RequestMapping(value = "/drugs/new", method = RequestMethod.POST)
-    public String processCreationForm(@Valid Drug drug, BindingResult result) {
+    public String processCreationForm(@RequestParam(name="patientId", required=false) Integer patientId, @Valid Drug drug, BindingResult result) {
         if (result.hasErrors()) {
             return VIEWS_DRUG_CREATE_OR_UPDATE_FORM;
         } else {
             this.repository.save(drug);
-            return "redirect:/drugs/" + drug.getId();
+            if ( patientId != null ) {
+            	return "redirect:/patients/" + patientId + "/drugs/new/" + drug.getId();
+            }
+            else {
+            	return "redirect:/drugs/" + drug.getId();
+            }
         }
     }
 
     @RequestMapping(value = "/drugs/find", method = RequestMethod.GET)
-    public String initFindForm(Map<String, Object> model) {
+    public String initFindForm(@RequestParam(name="patientId", required=false) Integer patientId, Map<String, Object> model) {
         model.put("drug", new Drug());
+        if( patientId != null ) {
+        	model.put("patientId", patientId);
+        }
         return "drugs/findDrugs";
     }
 
