@@ -53,7 +53,7 @@ class PatientController {
     @RequestMapping(value = { "/api/patients.json", "/api/patients.xml" })
     @CrossOrigin(origins = {
     		"http://localhost:4200",
-    		"https://www.schoenfisch-moroff.de/pm"
+    		"https://www.schoenfisch-moroff.de/pm/pm"
     })
     public @ResponseBody List<PatientInfo> showResourcesPatientList() {
         // Here we are returning an object of type 'Patients' rather than a collection of Patient
@@ -75,7 +75,7 @@ class PatientController {
     @RequestMapping(value = "/api/patients/{patientId}", method = RequestMethod.GET)
     @CrossOrigin(origins = {
     		"http://localhost:4200",
-    		"https://www.schoenfisch-moroff.de/pm"
+    		"https://www.schoenfisch-moroff.de/pm/pm"
     })
     public @ResponseBody Patient apiPatientDetails(@PathVariable("patientId") int patientId) {
     	return this.patients.findById(patientId);
