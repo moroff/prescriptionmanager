@@ -44,6 +44,7 @@ public class UserSettingsController {
             storedUserSettings.setCreateNewTherapy(userSetting.getCreateNewTherapy());
             storedUserSettings.setShowInactiveDrugs(userSetting.getShowInactiveDrugs());
             storedUserSettings.setDeleteTherapy(userSetting.getDeleteTherapy());
+            storedUserSettings.setHidePatients(userSetting.getHidePatients());
             return "redirect:/";
         }
     }

@@ -1,5 +1,5 @@
-<!DOCTYPE html>
 
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'patients')}">
 
 <body>
@@ -20,13 +20,19 @@
   <a th:href="@{{id}/drugs/new(id=${patient.id})}" class="btn btn-default"><span th:text="#{drug}">Drug</span>&nbsp;<span
     class="glyphicon glyphicon-plus-sign" aria-hidden="true" /></a>
  -->
-  <div th:if="${userSettings.createNewTherapy}">
-    <a th:href="@{{id}/drugs/new(id=${patient.id})}" class="btn btn-default"><span th:text="#{drug}">Drug</span>&nbsp;<span
-      class="glyphicon glyphicon-plus-sign" aria-hidden="true" /></a>
-    <a th:href="@{{id}/therapy/new(id=${patient.id})}" class="btn btn-default"><span th:text="#{therapy}">Therapy</span>&nbsp;<span
-      class="glyphicon glyphicon-plus-sign" aria-hidden="true" /></a>
+  <div>
+    <a th:if="${userSettings.createNewTherapy}" th:href="@{{id}/drugs/new(id=${patient.id})}" class="btn btn-default">
+      <span th:text="#{drug}">Drug</span>&nbsp;<span class="glyphicon glyphicon-plus-sign" aria-hidden="true" />
+    </a>
+    <a th:if="${userSettings.createNewTherapy}" th:href="@{{id}/therapy/new(id=${patient.id})}" class="btn btn-default">
+      <span th:text="#{therapy}">Therapy</span>&nbsp;<span class="glyphicon glyphicon-plus-sign" aria-hidden="true" />
+    </a>
+    <a th:if="${userSettings.hidePatients}" th:href="@{{id}/toggleHide(id=${patient.id})}" class="btn btn-default">
+      <span th:if="${patient.hide} == false" th:text="#{hide}">Hide</span>
+      <span th:if="${patient.hide}" th:text="#{show}">Show</span>
+    </a>
   </div>
-
+  
   <br />
   <h2 th:text="#{drugs}">Drugs</h2>
 

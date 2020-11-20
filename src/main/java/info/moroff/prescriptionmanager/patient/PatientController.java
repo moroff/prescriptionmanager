@@ -2,6 +2,7 @@ package info.moroff.prescriptionmanager.patient;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -45,21 +46,16 @@ class PatientController {
     public String showPatientList(Map<String, Object> model) {
         // Here we are returning an object of type 'Patients' rather than a collection of Patient
         // objects so it is simpler for Object-Xml mapping
-        model.put("patients", showResourcesPatientList());
+        model.put("patients", showResourcesPatientList(userSettings.getHidePatients()));
         model.put("uitools", uiTools);
         return "patients/patientList";
     }
 
-    @RequestMapping(value = { "/api/patients.json", "/api/patients.xml" })
-    @CrossOrigin(origins = {
-    		"http://localhost:4200",
-    		"https://www.schoenfisch-moroff.de"
-    })
-    public @ResponseBody List<PatientInfo> showResourcesPatientList() {
+    public @ResponseBody List<PatientInfo> showResourcesPatientList(boolean showHiddenPatients) {
         // Here we are returning an object of type 'Patients' rather than a collection of Patient
         // objects so it is simpler for JSon/Object mapping
         Patients patients = new Patients();
-        patients.addAll(this.patients.findAll());
+        patients.addAll(this.patients.findAll().stream().filter(p -> showHiddenPatients || !p.getHide()).sorted((p1,p2) -> p1.getId().compareTo(p2.getId())).collect(Collectors.toList()));
         return patients.getPatientList();
     }
     
@@ -72,15 +68,6 @@ class PatientController {
         return VIEWS_PATIENT_DETAILS_FORM;
     }
 
-    @RequestMapping(value = "/api/patients/{patientId}", method = RequestMethod.GET)
-    @CrossOrigin(origins = {
-    		"http://localhost:4200",
-    		"https://www.schoenfisch-moroff.de"
-    })
-    public @ResponseBody Patient apiPatientDetails(@PathVariable("patientId") int patientId) {
-    	return this.patients.findById(patientId);
-    }
-    
     @RequestMapping(value = "/patients/{patientId}/edit", method = RequestMethod.GET)
     public String initUpdatePatientForm(@PathVariable("patientId") int patientId, Model model) {
         Patient patient = this.patients.findById(patientId);
@@ -100,4 +87,18 @@ class PatientController {
         }
     }
 
+    @RequestMapping(value = "/patients/{patientId}/toggleHide", method = RequestMethod.GET)
+    public String processToggleHide(@PathVariable("patientId") int patientId, Model model) {
+        Patient patient = this.patients.findById(patientId);
+        
+        if ( !patient.getHide() ) {
+        	patient.setHide(Boolean.TRUE);
+        }
+        else {
+        	patient.setHide(Boolean.FALSE);        	
+        }
+        this.patients.save(patient);
+        
+        return "redirect:/patients/"+patientId;
+    }
 }

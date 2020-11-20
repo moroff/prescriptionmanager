@@ -8,6 +8,8 @@ public class UserSettings {
 
 	private Boolean deleteTherapy = false;
 	
+	private Boolean hidePatients = false;
+	
 	public Boolean getCreateNewTherapy() {
 		return createNewTherapy;
 	}
@@ -29,5 +31,11 @@ public class UserSettings {
 		this.deleteTherapy = deleteTherapy;
 	}
 	
+	public Boolean getHidePatients() {
+		return hidePatients;
+	}
+	public void setHidePatients(Boolean hidePatients) {
+		this.hidePatients = hidePatients;
+	}
 	
 }

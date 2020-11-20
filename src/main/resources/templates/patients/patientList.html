@@ -18,9 +18,10 @@
     </thead>
     <tbody>
       <tr th:each="patient : ${patients}">
-        <td><span th:class="${uitools.getLabelForRemainingDays(patient.remainingDays)}">&nbsp;</span>
-            &nbsp;
-            <span th:class="${uitools.getLabelForRemainingDays(patient.nextAppointmentDate)}">&nbsp;</span>
+        <td>
+          <span th:class="${uitools.getLabelForRemainingDays(patient.remainingDays)}">&nbsp;</span>
+          &nbsp;
+          <span th:class="${uitools.getLabelForRemainingDays(patient.nextAppointmentDate)}">&nbsp;</span>
         </td>
         <td><a th:href="@{/patients/__${patient.id}__}"><div th:text="|${patient.firstName} ${patient.lastName}|">Edit</div></a></td>
         <td th:if="${patient.exhaustingDate}" th:text="${#dates.format(patient.exhaustingDate, 'dd.MM.yyyy')}"></td>

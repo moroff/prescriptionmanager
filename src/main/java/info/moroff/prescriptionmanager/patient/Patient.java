@@ -34,6 +34,9 @@ import info.moroff.prescriptionmanager.util.CompareUtils;
 @Table(name = "patients")
 public class Patient extends PersonWithAddress {
 
+	@Column(name = "hide")
+	private Boolean hide;
+	
     @Column(name = "telephone")
 //    @NotEmpty
     @Digits(fraction = 0, integer = 10)
@@ -45,6 +48,13 @@ public class Patient extends PersonWithAddress {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "patient", fetch=FetchType.EAGER, orphanRemoval=true)
     private Set<Therapy> therapies;
 
+    public Boolean getHide() {
+		return hide != null ? hide : Boolean.FALSE;
+	}
+    public void setHide(Boolean hide) {
+		this.hide = hide;
+	}
+    
     public String getTelephone() {
         return this.telephone;
     }
