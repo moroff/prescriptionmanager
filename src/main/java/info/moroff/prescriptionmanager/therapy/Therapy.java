@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -23,7 +22,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import info.moroff.prescriptionmanager.model.BaseEntity;
 import info.moroff.prescriptionmanager.patient.Patient;
-import info.moroff.prescriptionmanager.util.CompareUtils;
 
 @SuppressWarnings("serial")
 @Entity

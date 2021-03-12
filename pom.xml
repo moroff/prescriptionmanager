@@ -11,8 +11,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.2.13.RELEASE</version>
-    <relativePath /> <!-- lookup parent from repository -->
+    <version>2.4.3</version>
   </parent>
   <name>prescriptionmanager</name>
   <description>Spring Boot Application for Prescription Manager</description>
@@ -25,15 +24,12 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
     <!-- Web dependencies -->
+    <!-- Web dependencies -->
     <webjars-locator.version>0.32-1</webjars-locator.version>
     <webjars-bootstrap.version>3.3.6</webjars-bootstrap.version>
     <webjars-jquery-ui.version>1.11.4</webjars-jquery-ui.version>
     <webjars-jquery.version>2.2.4</webjars-jquery.version>
     <wro4j.version>1.8.0</wro4j.version>
-
-    <!-- 
-    <thymeleaf.version>3.0.3.RELEASE</thymeleaf.version>
-     -->
 
     <cobertura.version>2.7</cobertura.version>
 
@@ -60,6 +56,10 @@
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-validation</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-thymeleaf</artifactId>
     </dependency>
     <dependency>
@@ -70,12 +70,6 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-rest</artifactId>
     </dependency>
-    <!-- 
-    <dependency>
-      <groupId>org.thymeleaf.extras</groupId>
-      <artifactId>thymeleaf-extras-java8time</artifactId>
-    </dependency>
-     -->
 
     <!-- Test dependencies -->    
     <dependency>

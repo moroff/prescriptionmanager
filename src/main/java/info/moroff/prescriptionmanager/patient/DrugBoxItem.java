@@ -1,9 +1,7 @@
 package info.moroff.prescriptionmanager.patient;
 
 import java.time.LocalDate;
-import java.time.Period;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

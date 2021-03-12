@@ -18,16 +18,12 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import org.springframework.beans.support.MutableSortDefinition;
-import org.springframework.beans.support.PropertyComparator;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import info.moroff.prescriptionmanager.model.BaseEntity;
 import info.moroff.prescriptionmanager.model.Periodicity;
-import info.moroff.prescriptionmanager.model.Prescription;
-import info.moroff.prescriptionmanager.patient.DrugBoxItem;
 import info.moroff.prescriptionmanager.util.LocalDateAdapter;
 
 /**
