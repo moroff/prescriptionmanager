@@ -137,7 +137,7 @@ class DrugBoxItemController {
 			if (drugBoxItem != null) {
 				Integer packageSize = drugBoxItem.getDrug().getPackageSize();
 				Integer oldAmount =  drugBoxItem.getAmount();
-				Integer newAmount = oldAmount < 0 ? packageSize : oldAmount + packageSize;
+				Integer newAmount = oldAmount + packageSize;
 				drugBoxItem.setInventoryAmount(newAmount.doubleValue());
 				drugBoxItem.setInventoryDate(LocalDate.now());
 
