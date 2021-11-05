@@ -80,41 +80,39 @@
         <td></td>
       </tr>
     </thead>
-    <div th:each="prescription : ${therapy.prescriptions}">
-      <tr th:each="appointment,app : ${prescription.appointments}">
-        <td valign="middle">
-          <dl class="dl-horizontal">
-            <dt th:text="${app.count}+' von '+${app.size}" /></dt>
-          </dl>
-        </td>
-        <td valign="middle">
-          <dl class="dl-horizontal">
-            <dt th:text="${appointment.date != null ? #temporals.format(appointment.date, 'E dd.MM.yyyy') : 'Offen'}" /></dt>
-          </dl>
-        </td>
-        <td>
-          <dl class="dl-horizontal">
-            <dt th:text="${appointment.prescription.prescriptionDate != null ? #temporals.format(appointment.prescription.prescriptionDate, 'dd.MM.yyyy') : 'Offen'}" /></dt>
-          </dl>
-        </td>
-        <td valign="top">
-          <div class="container-fluid">
-            <a th:href="@{appointments/{appointmentId}/move(direction=-1,appointmentId=${appointment.id})}"
-              ><span class="glyphicon glyphicon-arrow-left" aria-hidden="true" ></span></a>
-             &nbsp; 
-            <a th:href="@{appointments/{appointmentId}/move(direction=1,appointmentId=${appointment.id})}"
-              ><span class="glyphicon glyphicon-arrow-right" aria-hidden="true" ></span></a>
-             &nbsp; 
-            <a th:href="@{prescriptions/{prescriptionId}/appointments/{appointmentId}/moveToEnd(prescriptionId=${prescription.id},appointmentId=${appointment.id})}"
-              ><span class="glyphicon glyphicon-arrow-down" aria-hidden="true" ></span></a>
-             &nbsp;
-            <a th:href="@{prescriptions/{prescriptionId}/appointments/{appointmentId}/edit(prescriptionId=${prescription.id},appointmentId=${appointment.id})}"
-              ><span class="glyphicon glyphicon-pencil" aria-hidden="true" ></span></a>
-              
-          </div>
-        </td>
-      </tr>
-    </div>
+    <tr th:each="appointment,app : ${prescription.appointments}">
+      <td valign="middle">
+        <dl class="dl-horizontal">
+          <dt th:text="${app.count}+' von '+${app.size}" /></dt>
+        </dl>
+      </td>
+      <td valign="middle">
+        <dl class="dl-horizontal">
+          <dt th:text="${appointment.date != null ? #temporals.format(appointment.date, 'E dd.MM.yyyy') : 'Offen'}" /></dt>
+        </dl>
+      </td>
+      <td>
+        <dl class="dl-horizontal">
+          <dt th:text="${appointment.prescription.prescriptionDate != null ? #temporals.format(appointment.prescription.prescriptionDate, 'dd.MM.yyyy') : 'Offen'}" /></dt>
+        </dl>
+      </td>
+      <td valign="top">
+        <div class="container-fluid">
+          <a th:href="@{appointments/{appointmentId}/move(direction=-1,appointmentId=${appointment.id})}"
+            ><span class="glyphicon glyphicon-arrow-left" aria-hidden="true" ></span></a>
+           &nbsp; 
+          <a th:href="@{appointments/{appointmentId}/move(direction=1,appointmentId=${appointment.id})}"
+            ><span class="glyphicon glyphicon-arrow-right" aria-hidden="true" ></span></a>
+           &nbsp; 
+          <a th:href="@{prescriptions/{prescriptionId}/appointments/{appointmentId}/moveToEnd(prescriptionId=${prescription.id},appointmentId=${appointment.id})}"
+            ><span class="glyphicon glyphicon-arrow-down" aria-hidden="true" ></span></a>
+           &nbsp;
+          <a th:href="@{prescriptions/{prescriptionId}/appointments/{appointmentId}/edit(prescriptionId=${prescription.id},appointmentId=${appointment.id})}"
+            ><span class="glyphicon glyphicon-pencil" aria-hidden="true" ></span></a>
+            
+        </div>
+      </td>
+    </tr>
   </table> 
 </body>
 </html>
