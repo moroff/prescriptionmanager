@@ -73,18 +73,15 @@
         <dl class="dl-horizontal">
           <dt th:text="#{name}">Name</dt>
           <dd th:text="${therapy.name}" /></dd>
-          <dt th:text="#{nextAppointmentDate}">Next appointment</dt>
+          <dt th:text="#{previousTreatments}">Previous Treatment</dt>
+          <dd th:text="${therapy.previousTreatments}" /></dd>
+          <dt th:text="#{lastAppointmentDate}">Last appointment</dt>
           <dd th:if="${therapy.lastAppointmentDate}" th:text="${#temporals.format(therapy.lastAppointmentDate, 'dd.MM.yyyy')}" /></dd>
           <dd th:unless="${therapy.lastAppointmentDate}" th:text="#{dateOpen}" /></dd>
         </dl>
       </td>
       <td valign="top">
         <div class="container-fluid">
-        <!-- 
-          <a th:href="@{{patientId}/therapies/{therapyId}/add(patientId=${patient.id},therapyId=${therapy.id})}"
-              class="btn btn-default">+<span th:text="${prescription.count}">XX</a>
-          &nbsp;    
-         -->
           <a th:href="@{{patientId}/therapies/{therapyId}/edit(patientId=${patient.id},therapyId=${therapy.id})}"
             class="btn btn-default"><span class="glyphicon glyphicon-wrench" aria-hidden="true" /></a>
           <a th:if="${userSettings.deleteTherapy}"

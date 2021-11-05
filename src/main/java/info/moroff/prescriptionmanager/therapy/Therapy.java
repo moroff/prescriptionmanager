@@ -134,4 +134,34 @@ public class Therapy extends BaseEntity {
 		} 
 		return null;
     }
+    
+    public String getPreviousTreatments() {
+		if ( getPrescriptionsInternal().size() > 0) {
+			List<TherapyPrescription> prescriptions = getPrescriptions();
+    		TherapyPrescription lastPrescription = prescriptions.get(prescriptions.size()-1);
+    		List<TherapyAppointment> appointments = lastPrescription.getAppointments();
+    		
+    		if ( appointments.get(0).getDate().isAfter(LocalDate.now())) {
+    			return "alle "+ appointments.size()+ " noch offen";
+    		}
+    		
+    		int i=0;
+    		for ( ; i<appointments.size(); ++i ) {
+    			TherapyAppointment appointment = appointments.get(i);
+    			
+    			if ( appointment.getDate().isEqual(LocalDate.now()) || appointment.getDate().isAfter(LocalDate.now())) {
+    				break;
+    			}
+    		}
+    		
+    		if ( i<appointments.size() ) {
+    			return "" + (i+1) + " von " + appointments.size();
+    		}
+    		else {
+    			return "keine mehr offen";
+    		}
+		} 
+		return "";
+    	
+    }
 }
