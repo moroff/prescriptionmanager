@@ -73,8 +73,8 @@
         <dl class="dl-horizontal">
           <dt th:text="#{name}">Name</dt>
           <dd th:text="${therapy.name}" /></dd>
-          <dt th:text="#{previousTreatments}">Previous Treatment</dt>
-          <dd th:text="${therapy.previousTreatments}" /></dd>
+          <dt th:text="#{futureAppointments}">future Appointments</dt>
+          <dd th:text="${therapy.futureAppointments}" /></dd>
           <dt th:text="#{lastAppointmentDate}">Last appointment</dt>
           <dd th:if="${therapy.lastAppointmentDate}" th:text="${#temporals.format(therapy.lastAppointmentDate, 'dd.MM.yyyy')}" /></dd>
           <dd th:unless="${therapy.lastAppointmentDate}" th:text="#{dateOpen}" /></dd>

@@ -6,7 +6,8 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import info.moroff.prescriptionmanager.model.Periodicity;
 import info.moroff.prescriptionmanager.patient.Patient;
 import info.moroff.prescriptionmanager.patient.PatientRepository;
 import info.moroff.prescriptionmanager.ui.UITools;
@@ -28,7 +28,7 @@ import info.moroff.prescriptionmanager.ui.UITools;
 @Controller
 @RequestMapping("/patients/{patientId}")
 public class TherapyPrescriptionController {
-	private Logger logger = Logger.getLogger(getClass());
+	private Logger logger = LogManager.getLogger();
 	private final PatientRepository patientRepository;
 	private TherapyRepository therapyRepository;
 	private TherapyPrescriptionRepository prescriptionRepository;
@@ -163,6 +163,8 @@ public class TherapyPrescriptionController {
 			storedPrescription.setOnWednesdays(prescription.getOnWednesdays());
 			storedPrescription.setOnThursdays(prescription.getOnThursdays());
 			storedPrescription.setOnFridays(prescription.getOnFridays());
+			storedPrescription.setTherapyStartTime(prescription.getTherapyStartTime());
+			storedPrescription.setTherapyDuration(prescription.getTherapyDuration());
 			prescriptionRepository.save(storedPrescription);
 		}
 	}
@@ -219,28 +221,15 @@ public class TherapyPrescriptionController {
 					logger.debug("Deleted appointment #" + appointment.getId());
 				}
 
-				TherapyPrescription viewedPrescription = getViewedPrescription();
-				LocalDate therapyDate = viewedPrescription.getFirstTherapyDate();
-				if (therapyDate == null && viewedPrescription.prescriptionDate != null) {
-					therapyDate = calcNextDate(viewedPrescription, viewedPrescription.prescriptionDate);
-					viewedPrescription.setFirstTherapyDate(therapyDate);
-				}
-				if ( viewedPrescription.getCount() != null ) {
-					for (int i = 0; i < viewedPrescription.getCount(); i++) {
-						TherapyAppointment appointment = new TherapyAppointment();
-	
-						appointment.setDate(therapyDate);
-						appointment.setTherapy(stored);
-						appointment.setPrescription(viewedPrescription);
-						appointmentRepository.save(appointment);
-						therapyDate = calcNextDate(viewedPrescription, therapyDate);
-					}
-				}
+				getViewedPrescription().addAppointments(stored).forEach((a) -> {
+					this.appointmentRepository.save(a);
+				});
 				this.therapyRepository.save(stored);
 			}
 			return "redirect:/patients/" + patient.getId() + "/therapies/" + therapyId + "/edit";
 		}
 	}
+
 
 	@RequestMapping(value = "/therapies/{therapyId}/edit", method = RequestMethod.POST, params = { "deletePrescription" })
 	public String processUpdateFormDeleteAppointments(@PathVariable("therapyId") int therapyId, Patient patient, ModelMap model) {
@@ -288,8 +277,8 @@ public class TherapyPrescriptionController {
 		Optional<TherapyAppointment> max = prescription.getAppointments().stream()
 				.max((a1, a2) -> a1.getDate().compareTo(a2.getDate()));
 		LocalDate maxDate = max.get().getDate();
-		appointment.setDate(calcNextDate(prescription, maxDate));
-		prescription.setNextPrescription(calcNextDate(prescription, appointment.getDate()));
+		appointment.setDate(prescription.calcNextDate(maxDate));
+		prescription.setNextPrescription(prescription.calcNextDate(appointment.getDate()));
 
 		appointmentRepository.save(appointment);
 		prescriptionRepository.save(prescription);
@@ -321,34 +310,6 @@ public class TherapyPrescriptionController {
 			stored.setDate(appointment.getDate());
 			appointmentRepository.save(stored);
 			return "redirect:/patients/" + patient.getId() + "/therapies/" + therapyId + "/edit";
-		}
-	}
-
-	LocalDate calcNextDate(TherapyPrescription therapy, LocalDate startDate) {
-
-		if ( startDate == null ) {
-			return null;
-		}
-		
-		Periodicity periodicity = therapy.getPeriodicity();
-
-		if (periodicity == null) {
-			periodicity = Periodicity.WEEKLY;
-		}
-
-		switch (periodicity) {
-		case DAILY:
-			return startDate.plusDays(1);
-		case WEEKLY:
-			return therapy.getNextWeekDay(startDate);
-		case MONTHLY:
-			return startDate.plusMonths(1);
-		case QUARTER:
-			return startDate.plusMonths(3);
-		case YEARLY:
-			return startDate.plusYears(1);
-		default:
-			throw new IllegalArgumentException(periodicity.name());
 		}
 	}
 

@@ -52,6 +52,12 @@
           <label><input th:field="*{prescription.onWednesdays}" type="checkbox"> Mi</label>
           <label><input th:field="*{prescription.onThursdays}" type="checkbox"> Do</label>
           <label><input th:field="*{prescription.onFridays}" type="checkbox"> Fr</label>
+
+          <input
+            th:replace="~{fragments/inputField :: input ('Therapy Start Time', 'prescription.therapyStartTime')}" />
+          <input
+            th:replace="~{fragments/inputField :: input ('Therapy Duration [min]', 'prescription.therapyDuration')}" />
+
       </div>
       <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">

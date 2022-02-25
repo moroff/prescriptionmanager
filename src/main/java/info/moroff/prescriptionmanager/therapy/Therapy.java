@@ -5,7 +5,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.ListIterator;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -118,50 +121,39 @@ public class Therapy extends BaseEntity {
 
     public LocalDate getLastAppointmentDate() {
 		if ( getPrescriptionsInternal().size() > 0) {
-			List<TherapyPrescription> prescriptions = getPrescriptions();
-    		TherapyPrescription lastPrescription = prescriptions.get(prescriptions.size()-1);
-    		List<TherapyAppointment> appointments = lastPrescription.getAppointments();
-    		
-    		if ( lastPrescription.getPrescriptionDate() == null && appointments.size() > 0 ) {
-    			return appointments.get(0).getDate();
-    		}
-    		else if ( lastPrescription.getPrescriptionDate() != null && appointments.size() > 0) {
-    			TherapyAppointment lastAppointment = appointments.get(appointments.size()-1);
-    				
-   				return lastAppointment.getDate();
-    		}
+			Optional<TherapyPrescription> lastPrescription = getLastPrescriptionWithAppointments();
 
+			if ( lastPrescription.isPresent() ) {
+				List<TherapyAppointment> appointments = lastPrescription.get().getAppointments();
+				return appointments.get(appointments.size()-1).getDate();
+			}
+			else {
+				return null;
+			}
 		} 
 		return null;
     }
     
-    public String getPreviousTreatments() {
-		if ( getPrescriptionsInternal().size() > 0) {
-			List<TherapyPrescription> prescriptions = getPrescriptions();
-    		TherapyPrescription lastPrescription = prescriptions.get(prescriptions.size()-1);
-    		List<TherapyAppointment> appointments = lastPrescription.getAppointments();
-    		
-    		if ( appointments.get(0).getDate().isAfter(LocalDate.now())) {
-    			return "alle "+ appointments.size()+ " noch offen";
-    		}
-    		
-    		int i=0;
-    		for ( ; i<appointments.size(); ++i ) {
-    			TherapyAppointment appointment = appointments.get(i);
-    			
-    			if ( appointment.getDate().isEqual(LocalDate.now()) || appointment.getDate().isAfter(LocalDate.now())) {
-    				break;
-    			}
-    		}
-    		
-    		if ( i<appointments.size() ) {
-    			return "" + (i+1) + " von " + appointments.size();
-    		}
-    		else {
-    			return "keine mehr offen";
-    		}
-		} 
-		return "";
+    public String getFutureAppointments() {
+    	List<TherapyAppointment> futureAppointments = getPrescriptionsInternal().stream() //
+    			.flatMap((p) -> p.getAppointments().stream())//
+    			.filter((a) -> a.getDate().isAfter(LocalDate.now()))//
+    			.collect(Collectors.toList());
     	
+		if ( futureAppointments.isEmpty() ) {
+			return "keine";
+		}
+		else {
+			return Integer.toString(futureAppointments.size());
+		}
     }
+    
+	protected Optional<TherapyPrescription> getLastPrescriptionWithAppointments() {
+		List<TherapyPrescription> prescriptions = getPrescriptions();
+		Optional<TherapyPrescription> lastPrescription = prescriptions.stream() //
+			.filter((p) -> !p.getAppointments().isEmpty()) //
+			.sorted((p1,p2) -> p2.getFirstTherapyDate().compareTo(p1.getFirstTherapyDate()))
+			.findFirst();
+		return lastPrescription;
+	}
 }

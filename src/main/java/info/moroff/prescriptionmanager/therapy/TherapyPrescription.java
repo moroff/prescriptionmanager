@@ -1,11 +1,14 @@
 package info.moroff.prescriptionmanager.therapy;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
@@ -106,6 +109,27 @@ public class TherapyPrescription extends BaseEntity {
 		this.firstTherapyDate = firstTherapyDate;
 	}
 
+	@Column(columnDefinition = "TIME")
+	@DateTimeFormat(pattern = "HH:mm")
+	LocalTime therapyStartTime;
+	
+	public LocalTime getTherapyStartTime() {
+		return therapyStartTime;
+	}
+	public void setTherapyStartTime(LocalTime therapyStartTime) {
+		this.therapyStartTime = therapyStartTime;
+	}
+	
+	@Column(columnDefinition =  "INTEGER")
+	Integer therapyDuration;
+	
+	public Integer getTherapyDuration() {
+		return therapyDuration;
+	}
+	public void setTherapyDuration(Integer therapyDuration) {
+		this.therapyDuration = therapyDuration;
+	}
+	
 	/**
 	 * Virtual appointment date of first appointment on next prescription.
 	 */
@@ -133,7 +157,7 @@ public class TherapyPrescription extends BaseEntity {
 	}
 
 	@Column(columnDefinition = "BOOLEAN", name = "TUESDAY")
-	Boolean onTuesdays;
+	Boolean onTuesdays = Boolean.FALSE;
 
 	public Boolean getOnTuesdays() {
 		return onTuesdays;
@@ -144,7 +168,7 @@ public class TherapyPrescription extends BaseEntity {
 	}
 
 	@Column(columnDefinition = "BOOLEAN", name = "WEDNESDAY")
-	Boolean onWednesdays;
+	Boolean onWednesdays = Boolean.FALSE;
 
 	public Boolean getOnWednesdays() {
 		return onWednesdays;
@@ -155,7 +179,7 @@ public class TherapyPrescription extends BaseEntity {
 	}
 
 	@Column(columnDefinition = "BOOLEAN", name = "THURSDAY")
-	Boolean onThursdays;
+	Boolean onThursdays = Boolean.FALSE;
 
 	public Boolean getOnThursdays() {
 		return onThursdays;
@@ -166,7 +190,7 @@ public class TherapyPrescription extends BaseEntity {
 	}
 
 	@Column(columnDefinition = "BOOLEAN", name = "FRIDAY")
-	Boolean onFridays;
+	Boolean onFridays = Boolean.FALSE;
 
 	public Boolean getOnFridays() {
 		return onFridays;
@@ -358,6 +382,63 @@ public class TherapyPrescription extends BaseEntity {
 		} else {
 			return null;
 		}
+	}
+	
+	public LocalDate calcNextDate(LocalDate startDate) {
+
+		if ( startDate == null ) {
+			return null;
+		}
+		
+		Periodicity periodicity = getPeriodicity();
+
+		if (periodicity == null) {
+			periodicity = Periodicity.WEEKLY;
+		}
+
+		switch (periodicity) {
+		case DAILY:
+			return startDate.plusDays(1);
+		case WEEKLY:
+			return getNextWeekDay(startDate);
+		case MONTHLY:
+			return startDate.plusMonths(1);
+		case QUARTER:
+			return startDate.plusMonths(3);
+		case YEARLY:
+			return startDate.plusYears(1);
+		default:
+			throw new IllegalArgumentException(periodicity.name());
+		}
+	}
+	
+	public List<TherapyAppointment> addAppointments(Therapy stored) {
+		LocalDate therapyDate = getFirstTherapyDate();
+		if (therapyDate == null && prescriptionDate != null) {
+			therapyDate = calcNextDate(prescriptionDate);
+			setFirstTherapyDate(therapyDate);
+		}
+		if ( getCount() != null ) {
+			for (int i = 0; i < getCount(); i++) {
+				TherapyAppointment appointment = new TherapyAppointment();
+
+				appointment.setDate(therapyDate);
+				appointment.setTherapy(stored);
+				appointment.setUuid(UUID.randomUUID().toString());
+				therapyDate = calcNextDate(therapyDate);
+				addAppointment(appointment);
+			}
+		}
+		return getAppointments();
+	}
+	
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		
+		if ( prescriptionDate != null ) {
+			sb.append("prescriptionDate=").append(prescriptionDate.format(DateTimeFormatter.BASIC_ISO_DATE));
+		}
+		return sb.toString();
 	}
 
 }

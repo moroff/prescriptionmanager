@@ -53,4 +53,13 @@ public class TherapyAppointment extends BaseEntity {
 	public void setDate(LocalDate date) {
 		this.date = date;
 	}
+	
+	@Column(name = "uuid", columnDefinition = "VARCHAR", length = 36)
+	String uuid;
+	public String getUuid() {
+		return uuid;
+	}
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
 }

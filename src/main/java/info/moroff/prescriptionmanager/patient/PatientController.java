@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,15 +17,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import info.moroff.prescriptionmanager.IOutputGenerator;
 import info.moroff.prescriptionmanager.settings.UserSettings;
 import info.moroff.prescriptionmanager.ui.UITools;
 
 @Controller
 class PatientController {
-
     private static final String VIEWS_PATIENT_CREATE_OR_UPDATE_FORM = "patients/createOrUpdatePatientForm";
 	private static final String VIEWS_PATIENT_DETAILS_FORM = "patients/patientDetails";
 	private final PatientRepository patients;
+	private final Logger logger = LogManager.getLogger();
 
     @Autowired
     public PatientController(PatientRepository clinicService) {
@@ -36,6 +39,9 @@ class PatientController {
     @Autowired
     private UserSettings userSettings;
 
+    @Autowired
+    private IOutputGenerator icalGenerator;
+    
     @RequestMapping(value = { "/" })
     public String showHome(Map<String, Object> model) {
     	return showPatientList(model);
@@ -75,6 +81,16 @@ class PatientController {
         return VIEWS_PATIENT_CREATE_OR_UPDATE_FORM;
     }
 
+    @RequestMapping(value = "/patients/{patientId}/ical", produces = "text/calendar" , method = RequestMethod.GET)
+    @ResponseBody
+    public String getPatientICal(@PathVariable("patientId") int patientId, Model model) {
+    	logger.info("ical request for "+patientId);
+    	
+        Patient patient = this.patients.findById(patientId);
+
+        return icalGenerator.generateOutput(patient);
+    }
+    
     @RequestMapping(value = "/patients/{patientId}/edit", method = RequestMethod.POST)
     public String processUpdatePatientForm(@Valid Patient patient, BindingResult result, @PathVariable("patientId") int patientId) {
         if (result.hasErrors()) {
