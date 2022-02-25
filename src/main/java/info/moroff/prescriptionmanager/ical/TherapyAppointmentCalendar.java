@@ -5,6 +5,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,6 +82,7 @@ public class TherapyAppointmentCalendar implements IOutputGenerator {
 		
 		if ( localTime != null ) {
 			date.set(localDate.getYear(), localDate.getMonthValue()-1, localDate.getDayOfMonth(), localTime.getHour(), localTime.getMinute());
+			date.setTimeZone(TimeZone.getTimeZone("MET"));
 		}
 		else {
 			date.set(localDate.getYear(), localDate.getMonthValue()-1, localDate.getDayOfMonth());
