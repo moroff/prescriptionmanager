@@ -107,8 +107,11 @@ class DrugController {
         if (result.hasErrors()) {
             return VIEWS_DRUG_CREATE_OR_UPDATE_FORM;
         } else {
-            drug.setId(drugId);
-            this.repository.save(drug);
+        	Drug saved = this.repository.findById(drugId);
+            saved.setName(drug.getName());
+            saved.setPackageSize(drug.getPackageSize());
+            saved.setPzn(drug.getPzn());
+            this.repository.save(saved);
             return "redirect:/drugs/{drugId}";
         }
     }

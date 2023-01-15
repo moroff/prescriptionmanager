@@ -4,7 +4,10 @@
 <body>
 
   <h2 th:text="#{drugDetails}">Drug Details</h2>
+<!--
   <form th:object="${drug}" class="form-horizontal" id="add-drug-form" th:action="@{/drugs/new(patientId=__${patientId}__)}" method="post">
+  -->
+  <form th:with="action=${drug['new']} ? '/drugs/new?patientId=__${patientId}__' : '/drugs/__${drug.id}__/edit'" th:object="${drug}" class="form-horizontal" id="add-drug-form" th:action="@{${action}}" method="post">
     <div class="form-group has-feedback">
       <input
         th:replace="~{fragments/inputField :: input ('Name', 'name')}" />
