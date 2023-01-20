@@ -139,6 +139,7 @@ public class TherapyPrescriptionController {
 		}
 	}
 
+
 	private void updateTherapy(Therapy therapy, TherapyPrescription prescription, Therapy stored) {
 		TherapyPrescription storedPrescription;
 
@@ -282,6 +283,21 @@ public class TherapyPrescriptionController {
 
 		appointmentRepository.save(appointment);
 		prescriptionRepository.save(prescription);
+		return "redirect:/patients/" + patient.getId() + "/therapies/" + therapyId + "/edit";
+	}
+
+	@RequestMapping(value = "/therapies/{therapyId}/prescriptions/{prescriptionId}/appointments/{appointmentId}/delete", method = RequestMethod.GET)
+	public String processAppointmentDelete(@PathVariable("therapyId") int therapyId,
+			@PathVariable("prescriptionId") int prescriptionId, @PathVariable("appointmentId") int appointmentId, //
+			Patient patient) {
+
+		TherapyPrescription prescription = prescriptionRepository.findById(prescriptionId);
+		TherapyAppointment appointment = appointmentRepository.findById(appointmentId);
+
+		prescription.getAppointmentsInternal().remove(appointment);
+		prescriptionRepository.save(prescription);
+		appointment.setPrescription(null);
+		appointmentRepository.delete(appointment);
 		return "redirect:/patients/" + patient.getId() + "/therapies/" + therapyId + "/edit";
 	}
 
