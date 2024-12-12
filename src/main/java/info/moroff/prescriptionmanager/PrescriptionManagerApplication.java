@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ImportRuntimeHints;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
@@ -20,6 +21,7 @@ import info.moroff.prescriptionmanager.therapy.TherapyViewState;
 import info.moroff.prescriptionmanager.ui.UITools;
 
 @SpringBootApplication
+@ComponentScan({"info.moroff.prescriptionmanager"})
 @ImportRuntimeHints(PrescriptionManagerRuntimeHints.class)
 public class PrescriptionManagerApplication {
 
