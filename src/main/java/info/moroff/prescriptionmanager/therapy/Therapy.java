@@ -10,13 +10,13 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
 import org.springframework.beans.support.MutableSortDefinition;
 import org.springframework.beans.support.PropertyComparator;
@@ -137,7 +137,7 @@ public class Therapy extends BaseEntity {
     public String getFutureAppointments() {
     	List<TherapyAppointment> futureAppointments = getPrescriptionsInternal().stream() //
     			.flatMap((p) -> p.getAppointments().stream())//
-    			.filter((a) -> a.getDate().isAfter(LocalDate.now()))//
+    			.filter((a) -> a.getDate() != null && LocalDate.now().isBefore(a.getDate()))//
     			.collect(Collectors.toList());
     	
 		if ( futureAppointments.isEmpty() ) {

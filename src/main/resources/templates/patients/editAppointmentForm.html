@@ -1,4 +1,4 @@
-<html xmlns:th="http://www.thymeleaf.org"
+<html xmlns:th="https://www.thymeleaf.org"
   th:replace="~{fragments/layout :: layout (~{::body},'patients')}">
 
 <body>
@@ -13,7 +13,7 @@
       <input
         th:replace="~{fragments/displayField :: input ('Prescription', 'prescription.prescriptionDate')}" />
       <input
-        th:replace="~{fragments/inputField :: input ('Appointment', 'appointment.date')}" />
+        th:replace="~{fragments/inputField :: input ('Appointment', 'appointment.date', 'date'))}" />
 
 
     </div>

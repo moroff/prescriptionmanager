@@ -1,6 +1,6 @@
 package info.moroff.prescriptionmanager.model;
 
-import javax.xml.bind.annotation.adapters.XmlAdapter;
+import jakarta.xml.bind.annotation.adapters.XmlAdapter;
 
 public class PeriodicityAdapter extends XmlAdapter<String, Periodicity> {
 

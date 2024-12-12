@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html xmlns:th="http://www.thymeleaf.org"
+<html xmlns:th="https://www.thymeleaf.org"
   th:replace="~{fragments/layout :: layout (~{::body},'drugs')}">
 
   <body>
@@ -13,16 +13,6 @@
         <th>Name</th>
         <td><b th:text="*{drugName}"></b></td>
       </tr>
-      <!-- 
-      <tr>
-     	<th>Exhaust Date</th>
-        <td><b th:text="${#temporals.format(exhaustingDate, 'dd.MM.yyyy')}"></b></td>
-      </tr>
-      <tr>
-     	<th>Inventory Date</th>
-        <td><b th:text="${#temporals.format(inventoryDate, 'dd.MM.yyyy')}"></b></td>
-      </tr>
-       -->
       <tr>
      	<th>Inventory Amount</th>
         <td><b th:text="${inventoryAmount}"></b></td>

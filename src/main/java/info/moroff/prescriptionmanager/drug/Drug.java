@@ -1,10 +1,10 @@
 package info.moroff.prescriptionmanager.drug;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
 
 import info.moroff.prescriptionmanager.model.BaseEntity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
 @SuppressWarnings("serial")
 @Entity

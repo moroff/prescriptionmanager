@@ -8,13 +8,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.validation.constraints.Digits;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.Digits;
 
 import org.springframework.beans.support.MutableSortDefinition;
 import org.springframework.beans.support.PropertyComparator;
@@ -124,7 +124,7 @@ public class Patient extends PersonWithAddress {
     }
     
     public LocalDate getNextAppointmentDate() {
-    	Optional<LocalDate> minDate = getTherapyInternal().stream().map(t -> t.getLastAppointmentDate()).min(CompareUtils::compare);
+    	Optional<LocalDate> minDate = getTherapyInternal().stream().filter(t -> t.getLastAppointmentDate() != null).map(t -> t.getLastAppointmentDate()).min(CompareUtils::compare);
 
     	if ( minDate.isPresent() ) 
     		return minDate.get();

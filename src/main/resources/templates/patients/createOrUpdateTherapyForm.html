@@ -1,4 +1,4 @@
-<html xmlns:th="http://www.thymeleaf.org"
+<html xmlns:th="https://www.thymeleaf.org"
   th:replace="~{fragments/layout :: layout (~{::body}, 'patients')}">
 
 <body>
@@ -7,7 +7,7 @@
     <h2 th:text="#{therapy}">Therapy</h2>
     <div class="form-group has-feedback">
       <input
-        th:replace="~{fragments/inputField :: input ('Description', 'therapy.name')}" />
+        th:replace="~{fragments/inputField :: input ('Description', 'therapy.name', 'text')}" />
     </div>
     <div th:unless="${prescription}" class="form-group">
       <div class="col-sm-offset-2 col-sm-10">
@@ -33,18 +33,14 @@
     
     <div th:if="${prescription}">
       <div class="form-group has-feedback">
-      <!-- 
-          <input type="hidden" id="prescription.id" name="prescription.id" th:value="${prescription.id}"/>
-          <input type="text" disabled="disabled" name="viewPrescriptionId" th:value="${viewState?.prescriptionId}"/>
-       -->
           <input
-            th:replace="~{fragments/inputField :: input ('Number of therapies', 'prescription.count')}" />
+            th:replace="~{fragments/inputField :: input ('Number of therapies', 'prescription.count', 'text')}" />
           <input
-            th:replace="~{fragments/inputField :: input ('Prescription Date', 'prescription.prescriptionDate')}" />
+            th:replace="~{fragments/inputField :: input ('Prescription Date', 'prescription.prescriptionDate', 'date')}" />
           <input
-            th:replace="~{fragments/inputField :: input ('First Therapy Date', 'prescription.firstTherapyDate')}" />
+            th:replace="~{fragments/inputField :: input ('First Therapy Date', 'prescription.firstTherapyDate', 'date')}" />
           <input
-            th:replace="~{fragments/inputField :: input ('Next Prescription Date', 'prescription.nextPrescription')}" />
+            th:replace="~{fragments/inputField :: input ('Next Prescription Date', 'prescription.nextPrescription', 'date')}" />
             
           <label class="col-sm-2 control-label" th:text="#{daysOfWeek}">Days of week</label>  
           <label><input th:field="*{prescription.onMondays}" type="checkbox"> Mo</label>
@@ -54,9 +50,9 @@
           <label><input th:field="*{prescription.onFridays}" type="checkbox"> Fr</label>
 
           <input
-            th:replace="~{fragments/inputField :: input ('Therapy Start Time', 'prescription.therapyStartTime')}" />
+            th:replace="~{fragments/inputField :: input ('Therapy Start Time', 'prescription.therapyStartTime', 'text')}" />
           <input
-            th:replace="~{fragments/inputField :: input ('Therapy Duration [min]', 'prescription.therapyDuration')}" />
+            th:replace="~{fragments/inputField :: input ('Therapy Duration [min]', 'prescription.therapyDuration', 'text')}" />
 
       </div>
       <div class="form-group">

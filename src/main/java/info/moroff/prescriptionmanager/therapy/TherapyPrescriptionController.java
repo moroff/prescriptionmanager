@@ -2,9 +2,6 @@ package info.moroff.prescriptionmanager.therapy;
 
 import java.time.LocalDate;
 import java.util.Map;
-import java.util.Optional;
-
-import javax.validation.Valid;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,15 +21,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import info.moroff.prescriptionmanager.patient.Patient;
 import info.moroff.prescriptionmanager.patient.PatientRepository;
 import info.moroff.prescriptionmanager.ui.UITools;
+import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/patients/{patientId}")
 public class TherapyPrescriptionController {
-	private Logger logger = LogManager.getLogger();
+	private final Logger logger = LogManager.getLogger();
 	private final PatientRepository patientRepository;
-	private TherapyRepository therapyRepository;
-	private TherapyPrescriptionRepository prescriptionRepository;
-	private TherapyAppointmentRepository appointmentRepository;
+	private final TherapyRepository therapyRepository;
+	private final TherapyPrescriptionRepository prescriptionRepository;
+	private final TherapyAppointmentRepository appointmentRepository;
 
 	@Autowired
 	private TherapyViewState viewState;
@@ -275,11 +273,11 @@ public class TherapyPrescriptionController {
 		TherapyPrescription prescription = prescriptionRepository.findById(prescriptionId);
 		TherapyAppointment appointment = appointmentRepository.findById(appointmentId);
 
-		Optional<TherapyAppointment> max = prescription.getAppointments().stream()
-				.max((a1, a2) -> a1.getDate().compareTo(a2.getDate()));
-		LocalDate maxDate = max.get().getDate();
-		appointment.setDate(prescription.calcNextDate(maxDate));
-		prescription.setNextPrescription(prescription.calcNextDate(appointment.getDate()));
+		final var maxApp = prescription.getAppointments().stream().max((a1, a2) -> a1.getDate().compareTo(a2.getDate()));
+		final var maxDate = maxApp.get().getDate();
+		final var nextDate = prescription.calcNextDate(maxDate);
+		appointment.setDate(nextDate);
+		prescription.setNextPrescription(prescription.calcNextDate(nextDate));
 
 		appointmentRepository.save(appointment);
 		prescriptionRepository.save(prescription);

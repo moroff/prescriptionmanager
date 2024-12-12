@@ -1,4 +1,4 @@
-<html xmlns:th="http://www.thymeleaf.org"
+<html xmlns:th="https://www.thymeleaf.org"
   th:replace="~{fragments/layout :: layout (~{::body},'patients')}">
 
 
@@ -8,9 +8,9 @@
   <form th:object="${patient}" class="form-horizontal" id="add-patient-form" method="post">
     <div class="form-group has-feedback">
       <input
-        th:replace="~{fragments/inputField :: input ('First Name', 'firstName')}" />
+        th:replace="~{fragments/inputField :: input ('First Name', 'firstName', 'text'))}" />
       <input
-        th:replace="~{fragments/inputField :: input ('Last Name', 'lastName')}" />
+        th:replace="~{fragments/inputField :: input ('Last Name', 'lastName', 'text'))}" />
 
 
     </div>

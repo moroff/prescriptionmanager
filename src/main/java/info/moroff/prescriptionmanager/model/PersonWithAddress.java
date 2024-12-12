@@ -1,7 +1,7 @@
 package info.moroff.prescriptionmanager.model;
 
-import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
+import jakarta.persistence.Column;
+import jakarta.persistence.MappedSuperclass;
 
 @SuppressWarnings("serial")
 @MappedSuperclass

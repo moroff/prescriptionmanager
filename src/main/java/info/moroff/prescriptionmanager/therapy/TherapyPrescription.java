@@ -7,19 +7,20 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -142,7 +143,9 @@ public class TherapyPrescription extends BaseEntity {
 	}
 
 	public void setNextPrescription(LocalDate nextPrescription) {
-		this.nextPrescription = nextPrescription;
+		if ( !Objects.equals(this.nextPrescription, nextPrescription) ) {
+			this.nextPrescription = nextPrescription;
+		}
 	}
 
 	@Column(columnDefinition = "BOOLEAN", name = "MONDAY")

@@ -1,4 +1,4 @@
-<html xmlns:th="http://www.thymeleaf.org"
+<html xmlns:th="https://www.thymeleaf.org"
   th:replace="~{fragments/layout :: layout (~{::body},'patients')}">
 
 <body>
@@ -7,18 +7,18 @@
   <form th:object="${drugBoxItem}" class="form-horizontal" id="add-drugs-form" method="post">
     <div class="form-group has-feedback">
       <input
-        th:replace="~{fragments/inputField :: input ('Inventory Date', 'inventoryDate')}" />
+        th:replace="~{fragments/inputField :: input ('Inventory Date', 'inventoryDate', 'date')}" />
       <input
-        th:replace="~{fragments/inputField :: input ('Inventory Amount', 'inventoryAmount')}" />
+        th:replace="~{fragments/inputField :: input ('Inventory Amount', 'inventoryAmount', 'text')}" />
       <input
-        th:replace="~{fragments/inputField :: input ('Dayly Intake', 'daylyIntake')}" />
+        th:replace="~{fragments/inputField :: input ('Dayly Intake', 'daylyIntake', 'text')}" />
     </div>
     
     <div class="form-group">
       <div class="col-sm-offset-2 col-sm-10">
         <button
           th:with="text=${drugBoxItem['new']} ? 'drugsAdd' : 'drugsUpdate'"
-          class="btn btn-default" type="submit" th:text="#{${text}}">Add Drug</button>
+          class="btn btn-primary" type="submit" th:text="#{${text}}">Add Drug</button>
       </div>
     </div>
   </form>
