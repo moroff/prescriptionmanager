@@ -6,7 +6,6 @@ COPY src src
 
 # Copy Maven wrapper
 COPY mvnw .
-COPY .mvn .mvn
 
 # Set execution permission for the Maven wrapper
 RUN chmod +x ./mvnw
