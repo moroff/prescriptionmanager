@@ -27,7 +27,7 @@
       <li>
         <input
             th:value="#{addPrescription}"
-            class="btn btn-default" type="submit" name="addPrescription" value="AddPrescriptions"/>
+            class="btn btn-primary" type="submit" name="addPrescription" value="AddPrescriptions"/>
       </li>
     </ul>
     
@@ -59,13 +59,13 @@
         <div class="col-sm-offset-2 col-sm-10">
           <input
             th:with="text=${therapy['new']} ? 'therapyAdd' : 'therapyUpdate'" th:value="#{${text}}"
-            class="btn btn-default" type="submit" name="save"/>
+            class="btn btn-primary" type="submit" name="save"/>
           <input
             th:if="prescription" th:value="#{addAppointments}"
-            class="btn btn-default" type="submit" name="addAppointments" value="AddAppointments"/>
+            class="btn btn-primary" type="submit" name="addAppointments" value="AddAppointments"/>
           <input
             th:if="prescription" th:value="#{deletePrescription}"
-            class="btn btn-default" type="submit" name="deletePrescription" value="DeletePrescription"/>
+            class="btn btn-primary" type="submit" name="deletePrescription" value="DeletePrescription"/>
         </div>
       </div>
     </div>  

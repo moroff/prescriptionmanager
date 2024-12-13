@@ -35,7 +35,7 @@ public class DrugBoxItem extends BaseEntity {
 	 * Date of last inventory.
 	 */
 	@Column(columnDefinition="DATE")
-	@DateTimeFormat(pattern="dd.MM.yyyy")
+	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private LocalDate inventoryDate;
 	
 	/**

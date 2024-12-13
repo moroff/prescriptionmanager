@@ -45,7 +45,7 @@ public class TherapyAppointment extends BaseEntity {
 	}
 
 	@Column(name="date")
-	@DateTimeFormat(pattern = "dd.MM.yyyy")
+	@DateTimeFormat(pattern="yyyy-MM-dd")
 	LocalDate date;
 	public LocalDate getDate() {
 		return date;

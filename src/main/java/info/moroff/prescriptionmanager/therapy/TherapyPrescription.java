@@ -81,7 +81,7 @@ public class TherapyPrescription extends BaseEntity {
 	 * Issue date of the prescription.
 	 */
 	@Column(columnDefinition = "DATE")
-	@DateTimeFormat(pattern = "dd.MM.yyyy")
+	@DateTimeFormat(pattern="yyyy-MM-dd")
 	@XmlJavaTypeAdapter(LocalDateAdapter.class)
 	LocalDate prescriptionDate;
 
@@ -99,7 +99,7 @@ public class TherapyPrescription extends BaseEntity {
 	 * Date of the first appointment made for the prescription.
 	 */
 	@Column(columnDefinition = "DATE")
-	@DateTimeFormat(pattern = "dd.MM.yyyy")
+	@DateTimeFormat(pattern="yyyy-MM-dd")
 	LocalDate firstTherapyDate;
 
 	public LocalDate getFirstTherapyDate() {
@@ -135,7 +135,7 @@ public class TherapyPrescription extends BaseEntity {
 	 * Virtual appointment date of first appointment on next prescription.
 	 */
 	@Column(columnDefinition = "DATE")
-	@DateTimeFormat(pattern = "dd.MM.yyyy")
+	@DateTimeFormat(pattern="yyyy-MM-dd")
 	LocalDate nextPrescription;
 
 	public LocalDate getNextPrescription() {
