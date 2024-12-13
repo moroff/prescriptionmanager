@@ -98,7 +98,7 @@ public class DrugBoxItem extends BaseEntity {
 	}
 	
 //	public String getFlag() {
-//		String icon = "glyphicon glyphicon-flag";
+//		String icon = "fa fa-flag";
 //		
 //		
 //	}

@@ -16,16 +16,16 @@
 
 <!-- 
   <a th:href="@{{id}/edit(id=${patient.id})}" class="btn btn-default"><span th:text="#{patient}">Patient</span>&nbsp;<span
-    class="glyphicon glyphicon-edit" aria-hidden="true" /></a>
+    class="fa fa-edit" aria-hidden="true" /></a>
   <a th:href="@{{id}/drugs/new(id=${patient.id})}" class="btn btn-default"><span th:text="#{drug}">Drug</span>&nbsp;<span
-    class="glyphicon glyphicon-plus-sign" aria-hidden="true" /></a>
+    class="fa fa-plus-sign" aria-hidden="true" /></a>
  -->
   <div>
     <a th:if="${userSettings.createNewTherapy}" th:href="@{{id}/drugs/new(id=${patient.id})}" class="btn btn-default">
-      <span th:text="#{drug}">Drug</span>&nbsp;<span class="glyphicon glyphicon-plus-sign" aria-hidden="true" />
+      <span th:text="#{drug}">Drug</span>&nbsp;<span class="fa fa-plus-sign" aria-hidden="true" />
     </a>
     <a th:if="${userSettings.createNewTherapy}" th:href="@{{id}/therapy/new(id=${patient.id})}" class="btn btn-default">
-      <span th:text="#{therapy}">Therapy</span>&nbsp;<span class="glyphicon glyphicon-plus-sign" aria-hidden="true" />
+      <span th:text="#{therapy}">Therapy</span>&nbsp;<span class="fa fa-plus-sign" aria-hidden="true" />
     </a>
     <a th:if="${userSettings.hidePatients}" th:href="@{{id}/toggleHide(id=${patient.id})}" class="btn btn-default">
       <span th:if="${patient.hide} == false" th:text="#{hide}">Hide</span>
@@ -57,7 +57,7 @@
                 class="btn btn-default">+<span th:text="${drugBoxItem.drug.packageSize}">XX</span></a>
             &nbsp;    
             <a th:href="@{{patientId}/drugs/{drugId}/edit(patientId=${patient.id},drugId=${drugBoxItem.id})}"
-              class="btn btn-default"><span class="glyphicon glyphicon-wrench" aria-hidden="true" /></a>
+              class="btn btn-default"><span class="fa fa-wrench" aria-hidden="true" /></a>
           </div>
         </td>
       </div>
@@ -83,10 +83,10 @@
       <td valign="top">
         <div class="container-fluid">
           <a th:href="@{{patientId}/therapies/{therapyId}/edit(patientId=${patient.id},therapyId=${therapy.id})}"
-            class="btn btn-default"><span class="glyphicon glyphicon-wrench" aria-hidden="true" /></a>
+            class="btn btn-default"><span class="fa fa-wrench" aria-hidden="true" /></a>
           <a th:if="${userSettings.deleteTherapy}"
              th:href="@{{patientId}/therapies/{therapyId}/delete(patientId=${patient.id},therapyId=${therapy.id})}"
-            class="btn btn-default"><span class="glyphicon glyphicon-bin" aria-hidden="true" /></a>
+            class="btn btn-default"><span class="fa fa-trash" aria-hidden="true" /></a>
         </div>
       </td>
     </tr>
