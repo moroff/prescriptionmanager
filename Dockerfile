@@ -4,6 +4,9 @@ WORKDIR /app
 COPY pom.xml .
 COPY src src
 
+#
+#VOLUME ["$HOME/.m2","/root/.m2"]
+ 
 # Copy Maven wrapper
 COPY mvnw .
 COPY .mvn .mvn
